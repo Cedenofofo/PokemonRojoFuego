@@ -1,8 +1,20 @@
+"""
+Módulo de modelo para Pokémon.
+
+Contiene la clase Pokemon que representa un Pokémon con toda su información,
+incluyendo estadísticas, tipos, evoluciones y métodos de análisis.
+"""
 import json
 import os
 
+
 class Pokemon:
-    """Clase que representa un Pokémon con toda su información."""
+    """
+    Clase que representa un Pokémon con toda su información.
+    
+    Incluye estadísticas base, tipos, evoluciones, y métodos para calcular
+    efectividad de tipos, defensas y recomendaciones.
+    """
     
     # Mapeo de tipos a colores para la UI
     TYPE_COLORS = {
@@ -23,6 +35,79 @@ class Pokemon:
         'Dragón': '#7038F8',
         'Siniestro': '#705848',
         'Acero': '#B8B8D0'
+    }
+    
+    # Traducción de tipos de inglés a español
+    TYPE_TRANSLATIONS = {
+        'Normal': 'Normal',
+        'Fire': 'Fuego',
+        'Water': 'Agua',
+        'Electric': 'Eléctrico',
+        'Grass': 'Planta',
+        'Ice': 'Hielo',
+        'Fighting': 'Lucha',
+        'Poison': 'Veneno',
+        'Ground': 'Tierra',
+        'Flying': 'Volador',
+        'Psychic': 'Psíquico',
+        'Bug': 'Bicho',
+        'Rock': 'Roca',
+        'Ghost': 'Fantasma',
+        'Dragon': 'Dragón',
+        'Dark': 'Siniestro',
+        'Steel': 'Acero',
+        'Fairy': 'Hada'
+    }
+    
+    # Lista de todos los tipos disponibles (Gen 3)
+    ALL_TYPES = [
+        'Normal', 'Fuego', 'Agua', 'Eléctrico', 'Planta', 'Hielo',
+        'Lucha', 'Veneno', 'Tierra', 'Volador', 'Psíquico', 'Bicho',
+        'Roca', 'Fantasma', 'Dragón', 'Siniestro', 'Acero'
+    ]
+    
+    # Tabla de efectividad de tipos (Gen 3) - Ataque
+    # Estructura: {tipo_atacante: {tipo_defensor: multiplicador}}
+    TYPE_EFFECTIVENESS_CHART = {
+        'Normal': {'Roca': 0.5, 'Fantasma': 0, 'Acero': 0.5},
+        'Fuego': {'Fuego': 0.5, 'Agua': 0.5, 'Planta': 2, 'Hielo': 2, 'Bicho': 2, 'Roca': 0.5, 'Dragón': 0.5, 'Acero': 2},
+        'Agua': {'Fuego': 2, 'Agua': 0.5, 'Planta': 0.5, 'Tierra': 2, 'Roca': 2, 'Dragón': 0.5},
+        'Eléctrico': {'Agua': 2, 'Eléctrico': 0.5, 'Planta': 0.5, 'Tierra': 0, 'Volador': 2, 'Dragón': 0.5},
+        'Planta': {'Fuego': 0.5, 'Agua': 2, 'Planta': 0.5, 'Veneno': 0.5, 'Tierra': 2, 'Volador': 0.5, 'Bicho': 0.5, 'Roca': 2, 'Dragón': 0.5, 'Acero': 0.5},
+        'Hielo': {'Fuego': 0.5, 'Agua': 0.5, 'Planta': 2, 'Hielo': 0.5, 'Tierra': 2, 'Volador': 2, 'Dragón': 2, 'Acero': 0.5},
+        'Lucha': {'Normal': 2, 'Hielo': 2, 'Veneno': 0.5, 'Volador': 0.5, 'Psíquico': 0.5, 'Bicho': 0.5, 'Roca': 2, 'Fantasma': 0, 'Siniestro': 2, 'Acero': 2},
+        'Veneno': {'Planta': 2, 'Veneno': 0.5, 'Tierra': 0.5, 'Roca': 0.5, 'Fantasma': 0.5, 'Acero': 0},
+        'Tierra': {'Fuego': 2, 'Eléctrico': 2, 'Planta': 0.5, 'Veneno': 2, 'Volador': 0, 'Bicho': 0.5, 'Roca': 2, 'Acero': 2},
+        'Volador': {'Eléctrico': 0.5, 'Planta': 2, 'Lucha': 2, 'Bicho': 2, 'Roca': 0.5, 'Acero': 0.5},
+        'Psíquico': {'Lucha': 2, 'Veneno': 2, 'Psíquico': 0.5, 'Siniestro': 0},
+        'Bicho': {'Fuego': 0.5, 'Planta': 2, 'Lucha': 0.5, 'Veneno': 0.5, 'Volador': 0.5, 'Psíquico': 2, 'Fantasma': 0.5, 'Siniestro': 2, 'Acero': 0.5},
+        'Roca': {'Fuego': 2, 'Hielo': 2, 'Lucha': 0.5, 'Tierra': 0.5, 'Volador': 2, 'Bicho': 2, 'Acero': 0.5},
+        'Fantasma': {'Normal': 0, 'Psíquico': 2, 'Fantasma': 2, 'Siniestro': 0.5},
+        'Dragón': {'Dragón': 2, 'Acero': 0.5},
+        'Siniestro': {'Psíquico': 2, 'Fantasma': 2, 'Siniestro': 0.5},
+        'Acero': {'Fuego': 0.5, 'Agua': 0.5, 'Eléctrico': 0.5, 'Hielo': 2, 'Roca': 2, 'Acero': 0.5}
+    }
+    
+    # Tabla de defensa de tipos (Gen 3) - Defensa
+    # Estructura: {tipo_defensor: {tipo_atacante: multiplicador}}
+    TYPE_DEFENSE_CHART = {
+        'Normal': {'Lucha': 2, 'Fantasma': 0},
+        'Fuego': {'Fuego': 0.5, 'Agua': 2, 'Planta': 0.5, 'Hielo': 0.5, 'Tierra': 2, 'Bicho': 0.5, 'Roca': 2, 'Acero': 0.5, 'Dragón': 0.5},
+        'Agua': {'Fuego': 0.5, 'Agua': 0.5, 'Planta': 2, 'Eléctrico': 2, 'Hielo': 0.5, 'Acero': 0.5},
+        'Eléctrico': {'Eléctrico': 0.5, 'Tierra': 2, 'Volador': 0.5, 'Acero': 0.5},
+        'Planta': {'Fuego': 2, 'Agua': 0.5, 'Planta': 0.5, 'Eléctrico': 0.5, 'Hielo': 2, 'Veneno': 2, 'Tierra': 0.5, 'Volador': 2, 'Bicho': 2},
+        'Hielo': {'Fuego': 2, 'Hielo': 0.5, 'Lucha': 2, 'Roca': 2, 'Acero': 2},
+        'Lucha': {'Volador': 2, 'Psíquico': 2, 'Bicho': 0.5, 'Roca': 0.5, 'Siniestro': 0.5},
+        'Veneno': {'Planta': 0.5, 'Lucha': 0.5, 'Veneno': 0.5, 'Tierra': 2, 'Psíquico': 2, 'Bicho': 0.5, 'Fantasma': 0.5, 'Acero': 0},
+        'Tierra': {'Agua': 2, 'Planta': 2, 'Eléctrico': 0, 'Hielo': 2, 'Veneno': 0.5, 'Roca': 0.5},
+        'Volador': {'Eléctrico': 2, 'Hielo': 2, 'Planta': 0.5, 'Lucha': 0.5, 'Bicho': 0.5, 'Roca': 2, 'Acero': 0.5},
+        'Psíquico': {'Lucha': 0.5, 'Psíquico': 0.5, 'Bicho': 2, 'Fantasma': 2, 'Siniestro': 2},
+        'Bicho': {'Fuego': 2, 'Planta': 0.5, 'Lucha': 0.5, 'Volador': 2, 'Roca': 2, 'Fantasma': 0.5, 'Siniestro': 0.5, 'Acero': 0.5},
+        'Roca': {'Normal': 0.5, 'Fuego': 0.5, 'Agua': 2, 'Planta': 2, 'Lucha': 2, 'Tierra': 2, 'Volador': 0.5, 'Acero': 2},
+        'Fantasma': {'Normal': 0, 'Lucha': 0, 'Veneno': 0.5, 'Bicho': 0.5, 'Fantasma': 2, 'Siniestro': 2},
+        'Dragón': {'Fuego': 0.5, 'Agua': 0.5, 'Planta': 0.5, 'Eléctrico': 0.5, 'Hielo': 2, 'Dragón': 2, 'Acero': 0.5, 'Hada': 2},
+        'Siniestro': {'Lucha': 2, 'Psíquico': 0, 'Bicho': 2, 'Fantasma': 0.5, 'Siniestro': 0.5},
+        'Acero': {'Normal': 0.5, 'Fuego': 2, 'Lucha': 2, 'Tierra': 2, 'Volador': 0.5, 'Bicho': 0.5, 'Roca': 0.5, 'Fantasma': 0.5, 'Dragón': 0.5, 'Acero': 0.5, 'Hada': 0.5}
     }
     
     def __init__(self, data):
@@ -69,28 +154,16 @@ class Pokemon:
         self.abilities = data.get('abilities', [])
     
     def _translate_type(self, type_name):
-        """Traduce tipos de inglés a español."""
-        type_translations = {
-            'Normal': 'Normal',
-            'Fire': 'Fuego',
-            'Water': 'Agua',
-            'Electric': 'Eléctrico',
-            'Grass': 'Planta',
-            'Ice': 'Hielo',
-            'Fighting': 'Lucha',
-            'Poison': 'Veneno',
-            'Ground': 'Tierra',
-            'Flying': 'Volador',
-            'Psychic': 'Psíquico',
-            'Bug': 'Bicho',
-            'Rock': 'Roca',
-            'Ghost': 'Fantasma',
-            'Dragon': 'Dragón',
-            'Dark': 'Siniestro',
-            'Steel': 'Acero',
-            'Fairy': 'Hada'
-        }
-        return type_translations.get(type_name, type_name)
+        """
+        Traduce tipos de inglés a español.
+        
+        Args:
+            type_name: Nombre del tipo en inglés o español
+        
+        Returns:
+            str: Nombre del tipo en español
+        """
+        return self.TYPE_TRANSLATIONS.get(type_name, type_name)
         
     @property
     def types(self):
@@ -126,55 +199,55 @@ class Pokemon:
         
         # Evaluación general
         if total >= 500:
-            advice.append("⭐ ¡Excelente Pokémon! Muy equilibrado y poderoso.")
+            advice.append("[Excelente] Pokemon muy equilibrado y poderoso.")
         elif total >= 400:
-            advice.append("✅ Buen Pokémon para tu equipo. Estadísticas sólidas.")
+            advice.append("[Bueno] Buen Pokemon para tu equipo. Estadisticas solidas.")
         elif total >= 300:
-            advice.append("⚠️ Pokémon decente, pero hay mejores opciones.")
+            advice.append("[Decente] Pokemon decente, pero hay mejores opciones.")
         else:
-            advice.append("❌ Pokémon débil. Solo útil al inicio del juego.")
+            advice.append("[Debil] Pokemon debil. Solo util al inicio del juego.")
         
         # Velocidad
         if speed >= 90:
-            advice.append("⚡ Es muy rápido, atacará primero en la mayoría de los combates.")
+            advice.append("[Rapido] Es muy rapido, atacara primero en la mayoria de los combates.")
         elif speed < 50:
-            advice.append("🐌 Es lento, probablemente recibirá golpes antes de atacar.")
+            advice.append("[Lento] Es lento, probablemente recibira golpes antes de atacar.")
         
         # Defensa
         if defense >= 80:
-            advice.append("🛡️ Muy resistente, puede aguantar muchos golpes.")
+            advice.append("[Resistente] Muy resistente, puede aguantar muchos golpes.")
         elif defense < 50:
-            advice.append("💔 Frágil, ten cuidado en combates largos.")
+            advice.append("[Fragil] Fragil, ten cuidado en combates largos.")
         
         # Ataque
         if attack >= 90:
-            advice.append("💪 Muy fuerte físicamente, ideal para ataques de contacto.")
+            advice.append("[Fuerte] Muy fuerte fisicamente, ideal para ataques de contacto.")
         elif attack < 50:
-            advice.append("🤏 Ataque físico débil, mejor usa movimientos especiales.")
+            advice.append("[Debil] Ataque fisico debil, mejor usa movimientos especiales.")
         
         # HP
         if hp >= 90:
-            advice.append("❤️ Tiene mucha vida, perfecto para resistir.")
+            advice.append("[Vida] Tiene mucha vida, perfecto para resistir.")
         elif hp < 50:
-            advice.append("💉 Poca vida, evita combates prolongados.")
+            advice.append("[PocaVida] Poca vida, evita combates prolongados.")
         
         # Tipo
         if 'Fuego' in self.types:
-            advice.append("🔥 Tipo Fuego: Fuerte contra Planta, Bicho, Acero. Débil contra Agua, Roca, Tierra.")
+            advice.append("[Tipo Fuego] Fuerte contra Planta, Bicho, Acero. Debil contra Agua, Roca, Tierra.")
         elif 'Agua' in self.types:
-            advice.append("💧 Tipo Agua: Fuerte contra Fuego, Tierra, Roca. Débil contra Planta, Eléctrico.")
+            advice.append("[Tipo Agua] Fuerte contra Fuego, Tierra, Roca. Debil contra Planta, Electrico.")
         elif 'Eléctrico' in self.types:
-            advice.append("⚡ Tipo Eléctrico: Fuerte contra Agua, Volador. Débil contra Tierra.")
+            advice.append("[Tipo Electrico] Fuerte contra Agua, Volador. Debil contra Tierra.")
         elif 'Planta' in self.types:
-            advice.append("🌿 Tipo Planta: Fuerte contra Agua, Tierra, Roca. Débil contra Fuego, Hielo, Veneno, Volador, Bicho.")
+            advice.append("[Tipo Planta] Fuerte contra Agua, Tierra, Roca. Debil contra Fuego, Hielo, Veneno, Volador, Bicho.")
         
         # Evolución
         if self.evolutions:
             for evo in self.evolutions:
                 method_text = self._get_evolution_method_text(evo)
-                advice.append(f"🔄 Evoluciona a {evo['to']}: {method_text}")
+                advice.append(f"[Evolucion] Evoluciona a {evo['to']}: {method_text}")
         elif len(self.evolution_line) > 1:
-            advice.append(f"🔄 Puede evolucionar: {' → '.join(self.evolution_line)}")
+            advice.append(f"[Evolucion] Puede evolucionar: {' → '.join(self.evolution_line)}")
         
         return advice
     
@@ -280,71 +353,93 @@ class Pokemon:
             return ("Solo para expertos", "secondary")
     
     def get_damage_category_hint(self, move_type, move_category):
-        """Retorna información sobre la categoría de daño (Gen 3)."""
+        """
+        Retorna información sobre la categoría de daño (Gen 3).
+        
+        Incluye información sobre STAB (Same Type Attack Bonus) y qué estadística
+        se usa para calcular el daño según la categoría del movimiento.
+        
+        Args:
+            move_type: Tipo del movimiento
+            move_category: Categoría del movimiento ('physical', 'special', 'status')
+        
+        Returns:
+            list: Lista de strings con hints informativos
+        """
         hints = []
         
-        # STAB (Same Type Attack Bonus)
-        if move_type in self.types:
-            hints.append("✨ STAB: Este ataque recibe bonificación por ser del mismo tipo que tu Pokémon (+50% de daño)")
-        
-        # Categoría física vs especial (Gen 3)
-        if move_category == "physical":
-            attack_stat = self.base_stats.get('attack', 0)
-            hints.append(f"💪 Ataque Físico: Usa tu Ataque ({attack_stat}) para calcular el daño")
-        elif move_category == "special":
-            special_attack = self.base_stats.get('special_attack', 0)
-            hints.append(f"🔮 Ataque Especial: Usa tu Ataque Especial ({special_attack}) para calcular el daño")
+        try:
+            pokemon_types = getattr(self, 'types', []) or []
+            base_stats = getattr(self, 'base_stats', {}) or {}
+            
+            if not isinstance(base_stats, dict):
+                base_stats = {}
+            if not isinstance(pokemon_types, list):
+                pokemon_types = []
+            
+            # STAB (Same Type Attack Bonus) - solo para movimientos que hacen daño
+            if move_category != "status" and move_type and move_type in pokemon_types:
+                hints.append("STAB: Este ataque recibe bonificacion por ser del mismo tipo que tu Pokemon (+50% de dano)")
+            
+            # Categoría física vs especial (Gen 3)
+            if move_category == "physical":
+                attack_stat = base_stats.get('attack', 0)
+                hints.append(f"Ataque Fisico: Usa tu Ataque ({attack_stat}) para calcular el dano")
+            elif move_category == "special":
+                special_attack = base_stats.get('special_attack', 0)
+                hints.append(f"Ataque Especial: Usa tu Ataque Especial ({special_attack}) para calcular el dano")
+            elif move_category == "status":
+                hints.append("Movimiento de Estado: Este movimiento no causa dano directo, pero puede alterar estadisticas o causar efectos especiales")
+        except Exception as e:
+            hints.append("[Info] Informacion de dano no disponible")
         
         return hints
     
+    def _calculate_type_multiplier(self, attacker_types, defender_type, chart):
+        """
+        Calcula el multiplicador de daño considerando múltiples tipos del atacante.
+        
+        Args:
+            attacker_types: Lista de tipos del atacante
+            defender_type: Tipo del defensor
+            chart: Tabla de efectividad a usar
+        
+        Returns:
+            float: Multiplicador total de daño
+        """
+        total_multiplier = 1.0
+        for attacker_type in attacker_types:
+            if attacker_type in chart:
+                multiplier = chart[attacker_type].get(defender_type, 1.0)
+                total_multiplier *= multiplier
+        return total_multiplier
+    
     def get_type_effectiveness(self):
-        """Retorna información sobre ventajas y desventajas de tipo."""
-        # Tabla de efectividad de tipos (Gen 3)
-        # Estructura: {tipo_atacante: {tipo_defensor: multiplicador}}
-        type_chart = {
-            'Normal': {'Roca': 0.5, 'Fantasma': 0, 'Acero': 0.5},
-            'Fuego': {'Fuego': 0.5, 'Agua': 0.5, 'Planta': 2, 'Hielo': 2, 'Bicho': 2, 'Roca': 0.5, 'Dragón': 0.5, 'Acero': 2},
-            'Agua': {'Fuego': 2, 'Agua': 0.5, 'Planta': 0.5, 'Tierra': 2, 'Roca': 2, 'Dragón': 0.5},
-            'Eléctrico': {'Agua': 2, 'Eléctrico': 0.5, 'Planta': 0.5, 'Tierra': 0, 'Volador': 2, 'Dragón': 0.5},
-            'Planta': {'Fuego': 0.5, 'Agua': 2, 'Planta': 0.5, 'Veneno': 0.5, 'Tierra': 2, 'Volador': 0.5, 'Bicho': 0.5, 'Roca': 2, 'Dragón': 0.5, 'Acero': 0.5},
-            'Hielo': {'Fuego': 0.5, 'Agua': 0.5, 'Planta': 2, 'Hielo': 0.5, 'Tierra': 2, 'Volador': 2, 'Dragón': 2, 'Acero': 0.5},
-            'Lucha': {'Normal': 2, 'Hielo': 2, 'Veneno': 0.5, 'Volador': 0.5, 'Psíquico': 0.5, 'Bicho': 0.5, 'Roca': 2, 'Fantasma': 0, 'Siniestro': 2, 'Acero': 2},
-            'Veneno': {'Planta': 2, 'Veneno': 0.5, 'Tierra': 0.5, 'Roca': 0.5, 'Fantasma': 0.5, 'Acero': 0},
-            'Tierra': {'Fuego': 2, 'Eléctrico': 2, 'Planta': 0.5, 'Veneno': 2, 'Volador': 0, 'Bicho': 0.5, 'Roca': 2, 'Acero': 2},
-            'Volador': {'Eléctrico': 0.5, 'Planta': 2, 'Lucha': 2, 'Bicho': 2, 'Roca': 0.5, 'Acero': 0.5},
-            'Psíquico': {'Lucha': 2, 'Veneno': 2, 'Psíquico': 0.5, 'Siniestro': 0},
-            'Bicho': {'Fuego': 0.5, 'Planta': 2, 'Lucha': 0.5, 'Veneno': 0.5, 'Volador': 0.5, 'Psíquico': 2, 'Fantasma': 0.5, 'Siniestro': 2, 'Acero': 0.5},
-            'Roca': {'Fuego': 2, 'Hielo': 2, 'Lucha': 0.5, 'Tierra': 0.5, 'Volador': 2, 'Bicho': 2, 'Acero': 0.5},
-            'Fantasma': {'Normal': 0, 'Psíquico': 2, 'Fantasma': 2, 'Siniestro': 0.5},
-            'Dragón': {'Dragón': 2, 'Acero': 0.5},
-            'Siniestro': {'Psíquico': 2, 'Fantasma': 2, 'Siniestro': 0.5},
-            'Acero': {'Fuego': 0.5, 'Agua': 0.5, 'Eléctrico': 0.5, 'Hielo': 2, 'Roca': 2, 'Acero': 0.5}
-        }
+        """
+        Retorna información sobre ventajas y desventajas de tipo al atacar.
         
-        # Calcular efectividad contra cada tipo
-        strong_against = []  # Tipos contra los que es muy efectivo (x2)
-        weak_against = []     # Tipos contra los que es poco efectivo (x0.5)
-        no_effect = []        # Tipos contra los que no tiene efecto (x0)
+        Calcula qué tipos son super efectivos, poco efectivos o inmunes
+        cuando este Pokémon ataca, considerando todos sus tipos.
         
-        all_types = ['Normal', 'Fuego', 'Agua', 'Eléctrico', 'Planta', 'Hielo', 
-                     'Lucha', 'Veneno', 'Tierra', 'Volador', 'Psíquico', 'Bicho', 
-                     'Roca', 'Fantasma', 'Dragón', 'Siniestro', 'Acero']
+        Returns:
+            dict: Diccionario con 'strong_against', 'weak_against' y 'no_effect'
+        """
+        strong_against = []
+        weak_against = []
+        no_effect = []
         
-        for defender_type in all_types:
-            total_multiplier = 1.0
+        for defender_type in self.ALL_TYPES:
+            multiplier = self._calculate_type_multiplier(
+                self.types,
+                defender_type,
+                self.TYPE_EFFECTIVENESS_CHART
+            )
             
-            # Calcular multiplicador considerando ambos tipos del Pokémon
-            for attacker_type in self.types:
-                if attacker_type in type_chart:
-                    multiplier = type_chart[attacker_type].get(defender_type, 1.0)
-                    total_multiplier *= multiplier
-            
-            # Clasificar según el multiplicador total
-            if total_multiplier >= 2.0:
+            if multiplier >= 2.0:
                 strong_against.append(defender_type)
-            elif total_multiplier <= 0.5 and total_multiplier > 0:
+            elif multiplier <= 0.5 and multiplier > 0:
                 weak_against.append(defender_type)
-            elif total_multiplier == 0:
+            elif multiplier == 0:
                 no_effect.append(defender_type)
         
         return {
@@ -354,52 +449,31 @@ class Pokemon:
         }
     
     def get_type_defenses(self):
-        """Retorna información sobre qué tipos son efectivos o no efectivos contra este Pokémon."""
-        # Tabla de defensa (qué tipos hacen más/menos daño a este Pokémon)
-        type_chart = {
-            'Normal': {'Lucha': 2, 'Fantasma': 0},
-            'Fuego': {'Fuego': 0.5, 'Agua': 2, 'Planta': 0.5, 'Hielo': 0.5, 'Tierra': 2, 'Bicho': 0.5, 'Roca': 2, 'Acero': 0.5, 'Dragón': 0.5},
-            'Agua': {'Fuego': 0.5, 'Agua': 0.5, 'Planta': 2, 'Eléctrico': 2, 'Hielo': 0.5, 'Acero': 0.5},
-            'Eléctrico': {'Eléctrico': 0.5, 'Tierra': 2, 'Volador': 0.5, 'Acero': 0.5},
-            'Planta': {'Fuego': 2, 'Agua': 0.5, 'Planta': 0.5, 'Eléctrico': 0.5, 'Hielo': 2, 'Veneno': 2, 'Tierra': 0.5, 'Volador': 2, 'Bicho': 2},
-            'Hielo': {'Fuego': 2, 'Hielo': 0.5, 'Lucha': 2, 'Roca': 2, 'Acero': 2},
-            'Lucha': {'Volador': 2, 'Psíquico': 2, 'Bicho': 0.5, 'Roca': 0.5, 'Siniestro': 0.5},
-            'Veneno': {'Planta': 0.5, 'Lucha': 0.5, 'Veneno': 0.5, 'Tierra': 2, 'Psíquico': 2, 'Bicho': 0.5, 'Fantasma': 0.5, 'Acero': 0},
-            'Tierra': {'Agua': 2, 'Planta': 2, 'Eléctrico': 0, 'Hielo': 2, 'Veneno': 0.5, 'Roca': 0.5},
-            'Volador': {'Eléctrico': 2, 'Hielo': 2, 'Planta': 0.5, 'Lucha': 0.5, 'Bicho': 0.5, 'Roca': 2, 'Acero': 0.5},
-            'Psíquico': {'Lucha': 0.5, 'Psíquico': 0.5, 'Bicho': 2, 'Fantasma': 2, 'Siniestro': 2},
-            'Bicho': {'Fuego': 2, 'Planta': 0.5, 'Lucha': 0.5, 'Volador': 2, 'Roca': 2, 'Fantasma': 0.5, 'Siniestro': 0.5, 'Acero': 0.5},
-            'Roca': {'Normal': 0.5, 'Fuego': 0.5, 'Agua': 2, 'Planta': 2, 'Lucha': 2, 'Tierra': 2, 'Volador': 0.5, 'Acero': 2},
-            'Fantasma': {'Normal': 0, 'Lucha': 0, 'Veneno': 0.5, 'Bicho': 0.5, 'Fantasma': 2, 'Siniestro': 2},
-            'Dragón': {'Fuego': 0.5, 'Agua': 0.5, 'Planta': 0.5, 'Eléctrico': 0.5, 'Hielo': 2, 'Dragón': 2, 'Acero': 0.5, 'Hada': 2},
-            'Siniestro': {'Lucha': 2, 'Psíquico': 0, 'Bicho': 2, 'Fantasma': 0.5, 'Siniestro': 0.5},
-            'Acero': {'Normal': 0.5, 'Fuego': 2, 'Lucha': 2, 'Tierra': 2, 'Volador': 0.5, 'Bicho': 0.5, 'Roca': 0.5, 'Fantasma': 0.5, 'Dragón': 0.5, 'Acero': 0.5, 'Hada': 0.5}
-        }
+        """
+        Retorna información sobre qué tipos son efectivos o no efectivos contra este Pokémon.
         
-        # Calcular defensas considerando ambos tipos
-        weak_to = []      # Tipos que hacen x2 de daño
-        resistant_to = [] # Tipos que hacen x0.5 de daño
-        immune_to = []    # Tipos que no hacen daño (x0)
+        Calcula qué tipos hacen más daño, menos daño o no hacen daño a este Pokémon
+        cuando lo atacan, considerando todos sus tipos defensivos.
         
-        all_types = ['Normal', 'Fuego', 'Agua', 'Eléctrico', 'Planta', 'Hielo', 
-                     'Lucha', 'Veneno', 'Tierra', 'Volador', 'Psíquico', 'Bicho', 
-                     'Roca', 'Fantasma', 'Dragón', 'Siniestro', 'Acero']
+        Returns:
+            dict: Diccionario con 'weak_to', 'resistant_to' e 'immune_to'
+        """
+        weak_to = []
+        resistant_to = []
+        immune_to = []
         
-        for attacker_type in all_types:
-            total_multiplier = 1.0
+        for attacker_type in self.ALL_TYPES:
+            multiplier = self._calculate_type_multiplier(
+                self.types,
+                attacker_type,
+                self.TYPE_DEFENSE_CHART
+            )
             
-            # Calcular multiplicador considerando ambos tipos del Pokémon
-            for defender_type in self.types:
-                if defender_type in type_chart:
-                    multiplier = type_chart[defender_type].get(attacker_type, 1.0)
-                    total_multiplier *= multiplier
-            
-            # Clasificar según el multiplicador total
-            if total_multiplier >= 2.0:
+            if multiplier >= 2.0:
                 weak_to.append(attacker_type)
-            elif total_multiplier <= 0.5 and total_multiplier > 0:
+            elif multiplier <= 0.5 and multiplier > 0:
                 resistant_to.append(attacker_type)
-            elif total_multiplier == 0:
+            elif multiplier == 0:
                 immune_to.append(attacker_type)
         
         return {
@@ -449,6 +523,12 @@ class Pokemon:
             return [cls(pokemon_data) for pokemon_data in pokedex]
         except FileNotFoundError:
             return []
+    
+    @classmethod
+    def get_id_by_name(cls, name):
+        """Obtiene el ID de un Pokémon por su nombre."""
+        pokemon = cls.load_from_json(name=name)
+        return pokemon.id if pokemon else None
     
     def to_dict(self):
         """Convierte el Pokémon a diccionario para JSON."""

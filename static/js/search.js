@@ -126,9 +126,19 @@ function displayAutocompleteResults(results) {
         item.className = 'autocomplete-item';
         item.style.borderLeft = `4px solid ${pokemon.primary_color}`;
         
+        // Asegurar que la URL de imagen esté correctamente formateada
+        const imageUrl = pokemon.image_url || `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${String(pokemon.id).padStart(3, '0')}.png`;
+        
         item.innerHTML = `
+            <img src="${imageUrl}" 
+                 alt="${pokemon.name}" 
+                 style="width: 60px; height: 60px; object-fit: contain; flex-shrink: 0;"
+                 onerror="this.style.display='none'; const placeholder = this.nextElementSibling; if(placeholder) placeholder.style.display='flex';">
+            <div style="width: 60px; height: 60px; background: ${pokemon.primary_color}20; border-radius: 50%; display: none; align-items: center; justify-content: center; flex-shrink: 0;">
+                <i class="fas fa-pokemon" style="color: ${pokemon.primary_color}; font-size: 2rem;"></i>
+            </div>
             <div style="flex: 1;">
-                <div class="pokemon-name">${pokemon.name}</div>
+                <div class="pokemon-name" style="font-family: 'Press Start 2P', cursive;">${pokemon.name}</div>
                 <div class="pokemon-types">
                     ${pokemon.types.map(type => 
                         `<span class="type-mini" style="background: ${getTypeColor(type)}">${type}</span>`
@@ -164,15 +174,36 @@ function performSearch(query) {
 }
 
 function loadAllPokemon() {
-    fetch('/api/pokemon/all')
-        .then(response => response.json())
+    console.log('Cargando todos los Pokémon...');
+    fetch('/api/pokemon/all', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        cache: 'no-cache'
+    })
+        .then(response => {
+            console.log('Respuesta recibida, status:', response.status);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
+            console.log('Pokémon cargados:', data ? data.length : 0);
+            if (!data || !Array.isArray(data)) {
+                throw new Error('Datos inválidos recibidos de la API');
+            }
             allPokemon = data;
             filteredPokemon = [...allPokemon];
             displayPokemonGrid(allPokemon);
         })
         .catch(error => {
             console.error('Error al cargar Pokémon:', error);
+            const pokemonGrid = document.getElementById('pokemon-grid');
+            if (pokemonGrid) {
+                pokemonGrid.innerHTML = `<div class="col-12 text-center" style="color: var(--pokemon-gray);"><p>Error al cargar los Pokémon: ${error.message}. Por favor, recarga la página.</p></div>`;
+            }
         });
 }
 
@@ -230,12 +261,16 @@ function applyFilters() {
 
 function displayPokemonGrid(pokemonList) {
     const pokemonGrid = document.getElementById('pokemon-grid');
-    if (!pokemonGrid) return;
+    if (!pokemonGrid) {
+        console.error('No se encontró el elemento pokemon-grid');
+        return;
+    }
     
+    console.log('Mostrando', pokemonList.length, 'Pokémon en el grid');
     pokemonGrid.innerHTML = '';
     
     if (pokemonList.length === 0) {
-        pokemonGrid.innerHTML = '<div class="col-12 text-center text-white"><p>No se encontraron Pokémon con los filtros seleccionados.</p></div>';
+        pokemonGrid.innerHTML = '<div class="col-12 text-center" style="color: var(--pokemon-gray);"><p>No se encontraron Pokémon con los filtros seleccionados.</p></div>';
         return;
     }
     
@@ -247,19 +282,26 @@ function displayPokemonGrid(pokemonList) {
         card.className = 'pokemon-card fade-in';
         card.style.borderTop = `4px solid ${pokemon.primary_color}`;
         
+        // Asegurar que la URL de imagen esté correctamente formateada
+        const imageUrl = pokemon.image_url || `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${String(pokemon.id).padStart(3, '0')}.png`;
+        
         card.innerHTML = `
-            <div class="pokemon-sprite-placeholder mb-3">
-                <i class="fas fa-pokemon fa-4x" style="color: ${pokemon.primary_color}"></i>
+            <div class="pokemon-card-image-container">
+                <img src="${imageUrl}" 
+                     alt="${pokemon.name}" 
+                     class="pokemon-card-image" 
+                     loading="lazy"
+                     onerror="this.onerror=null; this.style.display='none'; const placeholder = this.nextElementSibling; if(placeholder) placeholder.style.display='flex';">
+                <div class="pokemon-sprite-placeholder" style="display: none; width: 100%; height: 200px; align-items: center; justify-content: center; background: ${pokemon.primary_color}20; border-radius: 8px;">
+                    <i class="fas fa-pokemon fa-4x" style="color: ${pokemon.primary_color}"></i>
+                </div>
             </div>
-            <h5>${pokemon.name}</h5>
-            <p class="text-muted mb-2">#${pokemon.id}</p>
-            <div class="types">
+            <p class="pokemon-number">#${String(pokemon.id).padStart(3, '0')}</p>
+            <h5 class="pokemon-card-name">${pokemon.name}</h5>
+            <div class="pokemon-types-container">
                 ${pokemon.types.map(type => 
                     `<span class="type-badge" style="background: ${getTypeColor(type)}">${type}</span>`
                 ).join('')}
-            </div>
-            <div class="mt-2">
-                <small class="text-muted">Total: ${pokemon.total_stats}</small>
             </div>
         `;
         
@@ -272,26 +314,4 @@ function displayPokemonGrid(pokemonList) {
     });
 }
 
-function getTypeColor(type) {
-    const typeColors = {
-        'Normal': '#A8A878',
-        'Fuego': '#F08030',
-        'Agua': '#6890F0',
-        'Eléctrico': '#F8D030',
-        'Planta': '#78C850',
-        'Hielo': '#98D8D8',
-        'Lucha': '#C03028',
-        'Veneno': '#A040A0',
-        'Tierra': '#E0C068',
-        'Volador': '#A890F0',
-        'Psíquico': '#F85888',
-        'Bicho': '#A8B820',
-        'Roca': '#B8A038',
-        'Fantasma': '#705898',
-        'Dragón': '#7038F8',
-        'Siniestro': '#705848',
-        'Acero': '#B8B8D0',
-        'Hada': '#EE99AC'
-    };
-    return typeColors[type] || '#68A090';
-}
+// getTypeColor está definido en utils.js

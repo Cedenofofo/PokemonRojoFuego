@@ -35,32 +35,38 @@
 </script>
 <div class="container my-2 pokemon-detail-container">
     <!-- Header del Pokémon -->
-    <div class="row mb-2">
+    <div class="row mb-3">
         <div class="col-12">
-            <div class="card shadow-lg border-0 pokemon-header-card" style="background: linear-gradient(135deg, {{ pokemon.get_primary_color() }} 0%, {{ pokemon.get_primary_color() }}dd 100%);">
-                <div class="card-body p-2 text-white">
+            <div class="card shadow-lg border-0 pokemon-header-card" style="background: linear-gradient(135deg, {{ pokemon.get_primary_color() }} 0%, {{ pokemon.get_primary_color() }}dd 100%); border-radius: 12px; overflow: hidden;">
+                <div class="card-body p-4 text-white">
                     <div class="row align-items-center">
-                        <div class="col-md-8">
-                            <h1 class="display-5 fw-bold mb-1">{{ pokemon.name }}</h1>
-                            <p class="lead mb-2" style="font-size: 0.9rem;">{{ pokemon.description }}</p>
-                            <div class="d-flex flex-wrap gap-1 mb-2">
+                        <div class="col-lg-4 col-md-5 text-center mb-3 mb-md-0">
+                            <div class="pokemon-sprite-container">
+                                {% set formatted_id = "%03d"|format(pokemon.id) %}
+                                {% set official_image_url = "https://assets.pokemon.com/assets/cms2/img/pokedex/full/" + formatted_id + ".png" %}
+                                <img src="{{ official_image_url }}" 
+                                     alt="{{ pokemon.name }}" 
+                                     class="pokemon-image" 
+                                     style="width: 100%; max-width: 280px; height: auto; max-height: 280px; object-fit: contain; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));"
+                                     onerror="this.onerror=null; this.src='{{ image_url or '' }}';">
+                                <p class="mt-3 mb-0" style="font-size: 1.2rem; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">#{{ formatted_id }}</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-md-7">
+                            <h1 class="display-4 fw-bold mb-2" style="font-family: 'Press Start 2P', cursive; font-size: 2rem; line-height: 1.2;">{{ pokemon.name }}</h1>
+                            <p class="lead mb-3" style="font-size: 1rem; opacity: 0.95;">{{ pokemon.description }}</p>
+                            <div class="d-flex flex-wrap gap-2 mb-3">
                                 {% for type in pokemon.types %}
-                                <span class="badge bg-light text-dark px-2 py-1" style="font-size: 0.75rem;">
-                                    <i class="fas fa-tag"></i> {{ type }}
+                                <span class="badge px-3 py-2" style="background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(10px); border: 2px solid rgba(255, 255, 255, 0.5); font-size: 0.9rem; font-weight: 600;">
+                                    <i class="fas fa-tag me-1"></i> {{ type }}
                                 </span>
                                 {% endfor %}
                             </div>
                             <div>
                                 {% set badge_text, badge_class = pokemon.get_recommendation_badge() %}
-                                <span class="badge bg-{{ badge_class }} px-2 py-1" style="font-size: 0.75rem;">
-                                    {{ badge_text }}
+                                <span class="badge bg-{{ badge_class }} px-3 py-2" style="font-size: 0.9rem; font-weight: 600;">
+                                    <i class="fas fa-star me-1"></i> {{ badge_text }}
                                 </span>
-                            </div>
-                        </div>
-                        <div class="col-md-4 text-center">
-                            <div class="pokemon-sprite-placeholder">
-                                <i class="fas fa-pokemon fa-10x opacity-50"></i>
-                                <p class="mt-2">#{{ pokemon.id }}</p>
                             </div>
                         </div>
                     </div>
@@ -70,20 +76,20 @@
     </div>
 
     <!-- Tabs para Novato/Experto/Evoluciones -->
-    <ul class="nav nav-tabs mb-2" id="viewTabs" role="tablist">
+    <ul class="nav nav-tabs mb-4" id="viewTabs" role="tablist" style="border-bottom: 3px solid var(--pokemon-blue);">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="novice-tab" data-bs-toggle="tab" data-bs-target="#novice-view" type="button">
-                <i class="fas fa-graduation-cap"></i> Vista Novato
+            <button class="nav-link active fw-bold" id="novice-tab" data-bs-toggle="tab" data-bs-target="#novice-view" type="button" style="font-size: 1rem;">
+                <i class="fas fa-graduation-cap me-2"></i> Vista Novato
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="expert-tab" data-bs-toggle="tab" data-bs-target="#expert-view" type="button">
-                <i class="fas fa-chart-line"></i> Vista Experto
+            <button class="nav-link fw-bold" id="expert-tab" data-bs-toggle="tab" data-bs-target="#expert-view" type="button" style="font-size: 1rem;">
+                <i class="fas fa-chart-line me-2"></i> Vista Experto
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="evolution-tab" data-bs-toggle="tab" data-bs-target="#evolution-view" type="button">
-                <i class="fas fa-seedling"></i> Evoluciones
+            <button class="nav-link fw-bold" id="evolution-tab" data-bs-toggle="tab" data-bs-target="#evolution-view" type="button" style="font-size: 1rem;">
+                <i class="fas fa-seedling me-2"></i> Evoluciones
             </button>
         </li>
     </ul>
@@ -92,121 +98,93 @@
         <!-- Vista Novato -->
         <div class="tab-pane fade show active" id="novice-view" role="tabpanel">
             <div class="row">
-                <div class="col-lg-8">
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-primary text-white">
-                            <h4 class="mb-0"><i class="fas fa-lightbulb"></i> Consejos para Novatos</h4>
+                <!-- Consejos para Novatos -->
+                <div class="col-12 mb-4">
+                    <div class="card shadow-lg border-0" style="border-radius: 12px;">
+                        <div class="card-header bg-primary text-white py-3" style="border-radius: 12px 12px 0 0;">
+                            <h4 class="mb-0 fw-bold"><i class="fas fa-lightbulb me-2"></i> Consejos para Novatos</h4>
                         </div>
-                        <div class="card-body">
-                            <ul class="list-unstyled">
+                        <div class="card-body p-4">
+                            <ul class="list-unstyled mb-0">
                                 {% for advice in pokemon.get_advice() %}
-                                <li class="mb-2">
-                                    <i class="fas fa-check-circle text-success"></i> {{ advice }}
+                                <li class="mb-3 p-3 rounded" style="background: var(--bg-light); border-left: 4px solid var(--pokemon-blue);">
+                                    <i class="fas fa-check-circle text-success me-2"></i> <span style="font-size: 1rem;">{{ advice }}</span>
                                 </li>
                                 {% endfor %}
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="card shadow-sm mb-3">
-                        <div class="card-header bg-info text-white">
-                            <h6 class="mb-0"><i class="fas fa-info-circle"></i> Información</h6>
-                        </div>
-                        <div class="card-body p-3">
-                            <p><strong>Ubicación:</strong><br>{{ pokemon.location }}</p>
-                            {% if pokemon.evolutions %}
-                            <p><strong>Evoluciones:</strong><br>
-                                {% for evo in pokemon.evolutions %}
-                                    <span class="badge bg-secondary mb-1">
-                                        {{ evo.to }}
-                                        {% if evo.method == 'level' and evo.level %}
-                                            (Nivel {{ evo.level }})
-                                        {% elif evo.method == 'stone' %}
-                                            ({{ evo.condition or 'Piedra' }})
-                                        {% elif evo.method == 'trade' %}
-                                            (Intercambio)
-                                        {% elif evo.method == 'friendship' %}
-                                            (Amistad)
-                                        {% endif %}
-                                    </span><br>
-                                {% endfor %}
-                            </p>
-                            {% elif pokemon.evolution_line|length > 1 %}
-                            <p><strong>Evolución:</strong><br>
-                                {% for evo in pokemon.evolution_line %}
-                                    {{ evo }}{% if not loop.last %} → {% endif %}
-                                {% endfor %}
-                            </p>
-                            {% endif %}
-                            {% if pokemon.abilities %}
-                            <p><strong>Habilidades:</strong><br>
-                                {% for ability in pokemon.abilities %}
-                                    {{ ability }}{% if not loop.last %}, {% endif %}
-                                {% endfor %}
-                            </p>
-                            {% endif %}
-                        </div>
-                    </div>
-                    
-                    <!-- Ventajas y Desventajas de Tipo -->
-                    <div class="card shadow-sm mt-3 mb-3">
-                        <div class="card-header bg-success text-white">
-                            <h6 class="mb-0"><i class="fas fa-sword"></i> Ventajas de Tipo</h6>
+            </div>
+            
+            <div class="row">
+                <!-- Ventajas de Tipo -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow-lg border-0 h-100" style="border-radius: 12px;">
+                        <div class="card-header bg-success text-white py-3" style="border-radius: 12px 12px 0 0;">
+                            <h6 class="mb-0 fw-bold"><i class="fas fa-sword me-2"></i> Ventajas de Tipo</h6>
                         </div>
                         <div class="card-body p-3">
                             {% set effectiveness = pokemon.get_type_effectiveness() %}
                             {% if effectiveness.strong_against %}
-                            <p><strong>Muy efectivo contra:</strong><br>
+                            <p class="mb-2"><strong>Muy efectivo contra:</strong></p>
+                            <div class="d-flex flex-wrap gap-1 mb-3">
                                 {% for type in effectiveness.strong_against %}
-                                <span class="badge" style="background: {{ pokemon.get_type_color(type) }}; margin: 2px;">{{ type }}</span>
+                                <span class="badge px-2 py-1" style="background: {{ pokemon.get_type_color(type) }}; font-size: 0.85rem;">{{ type }}</span>
                                 {% endfor %}
-                            </p>
+                            </div>
                             {% endif %}
                             {% if effectiveness.weak_against %}
-                            <p class="mt-2"><strong>Poco efectivo contra:</strong><br>
+                            <p class="mb-2"><strong>Poco efectivo contra:</strong></p>
+                            <div class="d-flex flex-wrap gap-1 mb-3">
                                 {% for type in effectiveness.weak_against %}
-                                <span class="badge bg-secondary" style="margin: 2px;">{{ type }}</span>
+                                <span class="badge bg-secondary px-2 py-1" style="font-size: 0.85rem;">{{ type }}</span>
                                 {% endfor %}
-                            </p>
+                            </div>
                             {% endif %}
                             {% if effectiveness.no_effect %}
-                            <p class="mt-2"><strong>Sin efecto contra:</strong><br>
+                            <p class="mb-2"><strong>Sin efecto contra:</strong></p>
+                            <div class="d-flex flex-wrap gap-1">
                                 {% for type in effectiveness.no_effect %}
-                                <span class="badge bg-dark" style="margin: 2px;">{{ type }}</span>
+                                <span class="badge bg-dark px-2 py-1" style="font-size: 0.85rem;">{{ type }}</span>
                                 {% endfor %}
-                            </p>
+                            </div>
                             {% endif %}
                         </div>
                     </div>
-                    
-                    <!-- Defensas de Tipo -->
-                    <div class="card shadow-sm mt-3">
-                        <div class="card-header bg-danger text-white">
-                            <h6 class="mb-0"><i class="fas fa-shield-alt"></i> Defensas de Tipo</h6>
+                </div>
+                
+                <!-- Defensas de Tipo -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow-lg border-0 h-100" style="border-radius: 12px;">
+                        <div class="card-header bg-danger text-white py-3" style="border-radius: 12px 12px 0 0;">
+                            <h6 class="mb-0 fw-bold"><i class="fas fa-shield-alt me-2"></i> Defensas de Tipo</h6>
                         </div>
                         <div class="card-body p-3">
                             {% set defenses = pokemon.get_type_defenses() %}
                             {% if defenses.weak_to %}
-                            <p><strong>Débil contra:</strong><br>
+                            <p class="mb-2"><strong>Débil contra:</strong></p>
+                            <div class="d-flex flex-wrap gap-1 mb-3">
                                 {% for type in defenses.weak_to %}
-                                <span class="badge bg-danger" style="margin: 2px;">{{ type }}</span>
+                                <span class="badge bg-danger px-2 py-1" style="font-size: 0.85rem;">{{ type }}</span>
                                 {% endfor %}
-                            </p>
+                            </div>
                             {% endif %}
                             {% if defenses.resistant_to %}
-                            <p class="mt-2"><strong>Resistente a:</strong><br>
+                            <p class="mb-2"><strong>Resistente a:</strong></p>
+                            <div class="d-flex flex-wrap gap-1 mb-3">
                                 {% for type in defenses.resistant_to %}
-                                <span class="badge" style="background: {{ pokemon.get_type_color(type) }}; margin: 2px;">{{ type }}</span>
+                                <span class="badge px-2 py-1" style="background: {{ pokemon.get_type_color(type) }}; font-size: 0.85rem;">{{ type }}</span>
                                 {% endfor %}
-                            </p>
+                            </div>
                             {% endif %}
                             {% if defenses.immune_to %}
-                            <p class="mt-2"><strong>Inmune a:</strong><br>
+                            <p class="mb-2"><strong>Inmune a:</strong></p>
+                            <div class="d-flex flex-wrap gap-1">
                                 {% for type in defenses.immune_to %}
-                                <span class="badge bg-dark" style="margin: 2px;">{{ type }}</span>
+                                <span class="badge bg-dark px-2 py-1" style="font-size: 0.85rem;">{{ type }}</span>
                                 {% endfor %}
-                            </p>
+                            </div>
                             {% endif %}
                         </div>
                     </div>
@@ -217,13 +195,13 @@
         <!-- Vista Experto -->
         <div class="tab-pane fade" id="expert-view" role="tabpanel">
             <!-- Estadísticas Base - Compactas en la parte superior -->
-            <div class="row mb-3">
+            <div class="row mb-4">
                 <div class="col-12">
-                    <div class="card shadow-sm expert-stats-card">
-                        <div class="card-header bg-gradient-primary text-white">
-                            <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Estadísticas Base</h5>
+                    <div class="card shadow-lg border-0 expert-stats-card" style="border-radius: 12px;">
+                        <div class="card-header bg-gradient-primary text-white py-3" style="border-radius: 12px 12px 0 0;">
+                            <h5 class="mb-0 fw-bold"><i class="fas fa-chart-bar me-2"></i> Estadísticas Base</h5>
                         </div>
-                        <div class="card-body p-3">
+                        <div class="card-body p-4">
                             <div class="row">
                                 <div class="col-md-4 col-sm-6 mb-3">
                                     <div class="stat-item">
@@ -292,48 +270,19 @@
                                     </div>
                                 </div>
                             </div>
-                            <hr class="my-2">
-                            <div class="text-center">
-                                <h6 class="mb-0">Total: <span class="badge bg-primary fs-6">{{ pokemon.get_total_stats() }}</span></h6>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Analizador de Movimientos - Ancho completo -->
-            <div class="row mb-3">
+            <!-- Efectividad de Tipos - Segundo lugar -->
+            <div class="row mb-4">
                 <div class="col-12">
-                    <div class="card shadow-sm expert-move-analyzer-card">
-                        <div class="card-header bg-gradient-danger text-white">
-                            <h5 class="mb-0"><i class="fas fa-sword"></i> Analizador de Movimientos</h5>
+                    <div class="card shadow-lg border-0" style="border-radius: 12px;">
+                        <div class="card-header bg-success text-white py-3" style="border-radius: 12px 12px 0 0;">
+                            <h5 class="mb-0 fw-bold"><i class="fas fa-chart-pie me-2"></i> Efectividad de Tipos</h5>
                         </div>
                         <div class="card-body p-4">
-                            <div class="mb-3">
-                                <label for="move-search" class="form-label mb-2 fw-bold">
-                                    <i class="fas fa-search me-2"></i>Buscar Movimiento
-                                </label>
-                                <div class="input-group input-group-lg search-container position-relative move-search-container">
-                                    <input type="text" class="form-control form-control-lg" id="move-search" placeholder="Escribe el nombre, tipo, categoría o potencia del movimiento...">
-                                    <button class="btn btn-primary btn-lg" type="button" id="analyze-btn">
-                                        <i class="fas fa-search me-2"></i>Analizar
-                                    </button>
-                                    <div id="move-autocomplete-results" class="move-autocomplete-dropdown"></div>
-                                </div>
-                            </div>
-                            <div id="move-analysis-result" class="move-analysis-container"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Efectividad de Tipos - Abajo en horizontal -->
-            <div class="row mt-2">
-                <div class="col-12">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-success text-white">
-                            <h5 class="mb-0"><i class="fas fa-chart-pie"></i> Efectividad de Tipos</h5>
-                        </div>
-                        <div class="card-body p-2">
                             {% set effectiveness = pokemon.get_type_effectiveness() %}
                             {% set defenses = pokemon.get_type_defenses() %}
                             
@@ -394,6 +343,71 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Comparador de Ataques - Aprender vs Olvidar -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card shadow-lg border-0" style="border-radius: 12px;">
+                        <div class="card-header bg-gradient-warning text-dark py-3" style="border-radius: 12px 12px 0 0;">
+                            <h5 class="mb-0 fw-bold"><i class="fas fa-exchange-alt me-2"></i> Comparador de Ataques</h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row mb-3">
+                                <div class="col-md-6 mb-3">
+                                    <label for="move-to-learn" class="form-label fw-bold">
+                                        <i class="fas fa-plus-circle text-success me-2"></i>Ataque a Aprender
+                                    </label>
+                                    <div class="input-group search-container position-relative move-search-container">
+                                        <input type="text" class="form-control" id="move-to-learn" placeholder="Buscar movimiento a aprender...">
+                                        <div id="move-to-learn-autocomplete" class="move-autocomplete-dropdown"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="move-to-forget" class="form-label fw-bold">
+                                        <i class="fas fa-minus-circle text-danger me-2"></i>Ataque a Olvidar
+                                    </label>
+                                    <div class="input-group search-container position-relative move-search-container">
+                                        <input type="text" class="form-control" id="move-to-forget" placeholder="Buscar movimiento a olvidar...">
+                                        <div id="move-to-forget-autocomplete" class="move-autocomplete-dropdown"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <button class="btn btn-primary btn-lg" type="button" id="compare-moves-btn">
+                                    <i class="fas fa-balance-scale me-2"></i>Comparar Ataques
+                                </button>
+                            </div>
+                            <div id="move-comparison-result" class="mt-4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Analizador de Movimientos - Ancho completo -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card shadow-lg border-0 expert-move-analyzer-card" style="border-radius: 12px;">
+                        <div class="card-header bg-gradient-danger text-white py-3" style="border-radius: 12px 12px 0 0;">
+                            <h5 class="mb-0 fw-bold"><i class="fas fa-sword me-2"></i> Analizador de Movimientos</h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <label for="move-search" class="form-label mb-2 fw-bold">
+                                    <i class="fas fa-search me-2"></i>Buscar Movimiento
+                                </label>
+                                <div class="input-group input-group-lg search-container position-relative move-search-container">
+                                    <input type="text" class="form-control form-control-lg" id="move-search" placeholder="Escribe el nombre, tipo, categoría o potencia del movimiento...">
+                                    <button class="btn btn-primary btn-lg" type="button" id="analyze-btn">
+                                        <i class="fas fa-search me-2"></i>Analizar
+                                    </button>
+                                    <div id="move-autocomplete-results" class="move-autocomplete-dropdown"></div>
+                                </div>
+                            </div>
+                            <div id="move-analysis-result" class="move-analysis-container"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Vista Evoluciones -->
@@ -402,11 +416,11 @@
                 <div class="col-lg-10 mx-auto">
                     {% set detailed_evolutions = pokemon.get_detailed_evolutions() %}
                     {% if detailed_evolutions %}
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-success text-white">
-                            <h5 class="mb-0"><i class="fas fa-seedling"></i> Línea Evolutiva de {{ pokemon.name }}</h5>
+                    <div class="card shadow-lg border-0" style="border-radius: 12px;">
+                        <div class="card-header bg-success text-white py-3" style="border-radius: 12px 12px 0 0;">
+                            <h5 class="mb-0 fw-bold"><i class="fas fa-seedling me-2"></i> Línea Evolutiva de {{ pokemon.name }}</h5>
                         </div>
-                        <div class="card-body p-3">
+                        <div class="card-body p-4">
                             <div class="evolution-timeline">
                                 {% for evo in detailed_evolutions %}
                                 <div class="evolution-step mb-3">
@@ -414,7 +428,17 @@
                                         <div class="col-md-4 text-center">
                                             <div class="evolution-card p-3">
                                                 <i class="fas fa-pokemon fa-5x mb-2" style="color: #8B4513;"></i>
-                                                <h5 class="mt-2">{{ pokemon.name if loop.first else detailed_evolutions[loop.index0 - 1].to }}</h5>
+                                                {% if loop.first %}
+                                                    <h5 class="mt-2">{{ pokemon.name }}</h5>
+                                                {% else %}
+                                                    {% set prev_pokemon_name = detailed_evolutions[loop.index0 - 1].to %}
+                                                    {% set prev_pokemon = Pokemon.load_from_json(name=prev_pokemon_name) %}
+                                                    {% if prev_pokemon %}
+                                                        <h5 class="mt-2"><a href="{{ url_for('pokemon_detail', pokemon_id=prev_pokemon.id) }}" style="color: inherit; text-decoration: none; cursor: pointer;">{{ prev_pokemon_name }}</a></h5>
+                                                    {% else %}
+                                                        <h5 class="mt-2">{{ prev_pokemon_name }}</h5>
+                                                    {% endif %}
+                                                {% endif %}
                                             </div>
                                         </div>
                                         <div class="col-md-1 text-center">
@@ -423,7 +447,12 @@
                                         <div class="col-md-4 text-center">
                                             <div class="evolution-card p-3">
                                                 <i class="fas fa-pokemon fa-5x mb-2" style="color: #228B22;"></i>
-                                                <h5 class="mt-2">{{ evo.to }}</h5>
+                                                {% set evo_pokemon = Pokemon.load_from_json(name=evo.to) %}
+                                                {% if evo_pokemon %}
+                                                    <h5 class="mt-2"><a href="{{ url_for('pokemon_detail', pokemon_id=evo_pokemon.id) }}" style="color: inherit; text-decoration: none; cursor: pointer;">{{ evo.to }}</a></h5>
+                                                {% else %}
+                                                    <h5 class="mt-2">{{ evo.to }}</h5>
+                                                {% endif %}
                                             </div>
                                         </div>
                                         <div class="col-md-3">
@@ -464,10 +493,10 @@
                         </div>
                     </div>
                     {% else %}
-                    <div class="card shadow-sm">
-                        <div class="card-body text-center p-3">
+                    <div class="card shadow-lg border-0" style="border-radius: 12px;">
+                        <div class="card-body text-center p-5">
                             <i class="fas fa-info-circle fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">{{ pokemon.name }} no tiene evoluciones.</h5>
+                            <h5 class="text-muted fw-bold">{{ pokemon.name }} no tiene evoluciones.</h5>
                             <p class="text-muted">Este Pokémon no puede evolucionar.</p>
                         </div>
                     </div>

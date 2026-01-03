@@ -46,14 +46,35 @@ function setupIntelligentSearch(inputId, resultsId, callback) {
 }
 
 function intelligentSearchPokemon(query, resultsContainer, callback) {
-    fetch(`/api/pokemon/all`)
-        .then(response => response.json())
-        .then(allPokemon => {
-            const results = intelligentSearch(query, allPokemon);
-            displayAutocomplete(results, resultsContainer, callback);
+    // Usar el endpoint de búsqueda inteligente en lugar de cargar todos
+    fetch(`/api/pokemon/search?q=${encodeURIComponent(query)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la respuesta del servidor');
+            }
+            return response.json();
+        })
+        .then(results => {
+            // El endpoint ya devuelve resultados ordenados y limitados
+            if (results && results.length > 0) {
+                displayAutocomplete(results, resultsContainer, callback);
+            } else {
+                resultsContainer.classList.remove('show');
+                resultsContainer.innerHTML = '';
+            }
         })
         .catch(error => {
             console.error('Error en búsqueda:', error);
+            // Fallback: intentar con /api/pokemon/all si falla la búsqueda inteligente
+            fetch(`/api/pokemon/all`)
+                .then(response => response.json())
+                .then(allPokemon => {
+                    const results = intelligentSearch(query, allPokemon);
+                    displayAutocomplete(results, resultsContainer, callback);
+                })
+                .catch(fallbackError => {
+                    console.error('Error en búsqueda fallback:', fallbackError);
+                });
         });
 }
 
@@ -134,11 +155,14 @@ function displayAutocomplete(results, container, callback) {
         
         item.innerHTML = `
             <div class="d-flex align-items-center gap-3">
-                <div style="width: 50px; height: 50px; background: ${pokemon.primary_color}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.9rem;">
-                    #${pokemon.id}
-                </div>
+                ${pokemon.image_url ? 
+                    `<img src="${pokemon.image_url}" alt="${pokemon.name}" style="width: 60px; height: 60px; object-fit: contain; flex-shrink: 0;" onerror="this.onerror=null; this.outerHTML='<div style=\\'width: 60px; height: 60px; background: ${pokemon.primary_color}20; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;\\'><span style=\\'color: ${pokemon.primary_color}; font-weight: bold; font-size: 0.9rem;\\'>#${pokemon.id}</span></div>'">` : 
+                    `<div style="width: 60px; height: 60px; background: ${pokemon.primary_color}20; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <span style="color: ${pokemon.primary_color}; font-weight: bold; font-size: 0.9rem;">#${pokemon.id}</span>
+                    </div>`
+                }
                 <div style="flex: 1;">
-                    <div style="font-weight: 600; font-size: 1rem; color: #333;">${pokemon.name}</div>
+                    <div style="font-weight: 600; font-size: 1rem; color: #333; font-family: 'Press Start 2P', cursive;">${pokemon.name}</div>
                     <div style="font-size: 0.85rem; color: #666; margin-top: 0.25rem;">
                         ${pokemon.types.map(t => `<span class="badge" style="background: ${getTypeColor(t)}; color: white; font-size: 0.7rem; margin-right: 0.25rem;">${t}</span>`).join('')}
                     </div>
@@ -196,22 +220,24 @@ function loadFullPokemonData(pokemonId, callback) {
 
 function displayPokemon(pokemon, containerId) {
     const container = document.getElementById(containerId);
+    
+    // Usar imagen oficial de assets.pokemon.com (formato ID a 3 dígitos)
+    const formattedId = String(pokemon.id).padStart(3, '0');
+    const officialImageUrl = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${formattedId}.png`;
+    
     container.innerHTML = `
-        <div class="card border-0 shadow-lg pokedex-pokemon-card" style="background: linear-gradient(135deg, ${pokemon.primary_color} 0%, ${pokemon.primary_color}dd 100%); border-radius: 15px;">
-            <div class="card-body p-4 text-white">
-                <div class="text-center mb-3">
-                    <div style="width: 100px; height: 100px; background: rgba(255,255,255,0.2); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: bold; border: 3px solid rgba(255,255,255,0.3);">
-                        #${pokemon.id}
-                    </div>
+        <div class="card border-0 shadow-lg pokemon-display-card" style="border: 3px solid var(--border-color); border-radius: 12px; background: linear-gradient(135deg, ${pokemon.primary_color || '#68A090'}20 0%, ${pokemon.primary_color || '#68A090'}10 100%);">
+            <div class="card-body p-4 text-center">
+                <div class="pokemon-display-image mb-3">
+                    <img src="${officialImageUrl}" 
+                         alt="${pokemon.name}" 
+                         style="width: 100%; max-width: 200px; height: auto; max-height: 200px; object-fit: contain; filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3)); image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"
+                         onerror="this.onerror=null; this.src='${pokemon.image_url || pokemon.sprites?.official_artwork || pokemon.sprites?.front_default || ''}'">
                 </div>
-                <h4 class="text-center mb-3" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">${pokemon.name}</h4>
-                <div class="d-flex justify-content-center gap-2 mb-3 flex-wrap">
-                    ${pokemon.types.map(t => `<span class="badge bg-light text-dark px-3 py-2" style="font-size: 0.9rem; font-weight: 600;">${t}</span>`).join('')}
-                </div>
-                <div class="text-center">
-                    <a href="/pokemon/${pokemon.id}" class="btn btn-light btn-sm">
-                        <i class="fas fa-info-circle me-1"></i> Ver Detalles
-                    </a>
+                <h4 class="mb-2" style="color: var(--pokemon-gray); font-weight: 700; font-family: 'Press Start 2P', cursive; font-size: 1.2rem;">${pokemon.name}</h4>
+                <p class="mb-3" style="color: var(--pokemon-gray); font-weight: 600; font-size: 1rem;">#${formattedId}</p>
+                <div class="d-flex justify-content-center gap-2 flex-wrap">
+                    ${pokemon.types.map(t => `<span class="badge px-3 py-2" style="background: ${getTypeColor(t)}; color: white; font-size: 0.9rem; font-weight: 600; border: 2px solid ${getTypeColor(t)}; border-radius: 20px;">${t}</span>`).join('')}
                 </div>
             </div>
         </div>
@@ -253,10 +279,11 @@ function comparePokemon() {
         }
         
         displayStatsCards();
-        compareStats();
-        analyzeTypeMatchup();
         compareTypes();
         generateRecommendation();
+        
+        // Eliminar el cuadro de "Análisis de Enfrentamiento" si existe
+        removeAnalysisBox();
     }).catch(error => {
         console.error('Error en comparación:', error);
         alert('Error al comparar los Pokémon. Por favor, intenta de nuevo.');
@@ -316,69 +343,6 @@ function displayPokemonStats(pokemon, containerId, colorClass) {
     });
     html += '</div>';
     
-    const total = pokemon.total_stats || Object.values(pokemon.base_stats || {}).reduce((a, b) => a + b, 0);
-    html += `<hr class="my-2"><div class="text-center"><h6 class="mb-0">Total: <span class="badge bg-${colorClass} fs-6">${total}</span></h6></div>`;
-    
-    container.innerHTML = html;
-}
-
-function compareStats() {
-    const container = document.getElementById('stats-comparison');
-    if (!container) return;
-    
-    const stats = ['hp', 'attack', 'defense', 'special_attack', 'special_defense', 'speed'];
-    const statNames = {
-        'hp': 'PS', 'attack': 'Ataque', 'defense': 'Defensa',
-        'special_attack': 'Ataque Esp.', 'special_defense': 'Defensa Esp.', 'speed': 'Velocidad'
-    };
-    
-    if (!pokemon1.total_stats && pokemon1.base_stats) {
-        pokemon1.total_stats = Object.values(pokemon1.base_stats).reduce((a, b) => a + b, 0);
-    }
-    if (!pokemon2.total_stats && pokemon2.base_stats) {
-        pokemon2.total_stats = Object.values(pokemon2.base_stats).reduce((a, b) => a + b, 0);
-    }
-    
-    let html = '<table class="table table-hover table-bordered align-middle" style="font-size: 0.95rem;">';
-    html += `<thead class="table-light"><tr><th style="width: 25%;">Estadística</th><th style="width: 25%;" class="text-center text-success">${pokemon1.name}</th><th style="width: 25%;" class="text-center text-danger">${pokemon2.name}</th><th style="width: 25%;" class="text-center">Ganador</th></tr></thead><tbody>`;
-    
-    stats.forEach(stat => {
-        const val1 = pokemon1.base_stats?.[stat] || 0;
-        const val2 = pokemon2.base_stats?.[stat] || 0;
-        const diff = val1 - val2;
-        let winner = 'Empate';
-        let winnerClass = 'text-muted';
-        
-        if (diff > 0) {
-            winner = pokemon1.name;
-            winnerClass = 'text-success';
-        } else if (diff < 0) {
-            winner = pokemon2.name;
-            winnerClass = 'text-danger';
-        }
-        
-        html += `<tr>
-            <td><strong>${statNames[stat]}</strong></td>
-            <td class="text-center"><strong>${val1}</strong></td>
-            <td class="text-center"><strong>${val2}</strong></td>
-            <td class="text-center ${winnerClass}"><strong>${winner}</strong> ${diff !== 0 ? `(${diff > 0 ? '+' : ''}${diff})` : ''}</td>
-        </tr>`;
-    });
-    
-    const total1 = pokemon1.total_stats || 0;
-    const total2 = pokemon2.total_stats || 0;
-    const totalDiff = total1 - total2;
-    const totalWinner = totalDiff > 0 ? pokemon1.name : totalDiff < 0 ? pokemon2.name : 'Empate';
-    const totalWinnerClass = totalDiff > 0 ? 'text-success' : totalDiff < 0 ? 'text-danger' : 'text-muted';
-    
-    html += `<tr class="table-info">
-        <td><strong>Total</strong></td>
-        <td class="text-center"><strong>${total1}</strong></td>
-        <td class="text-center"><strong>${total2}</strong></td>
-        <td class="text-center ${totalWinnerClass}"><strong>${totalWinner}</strong> ${totalDiff !== 0 ? `(${totalDiff > 0 ? '+' : ''}${totalDiff})` : ''}</td>
-    </tr>`;
-    
-    html += '</tbody></table>';
     container.innerHTML = html;
 }
 
@@ -433,45 +397,52 @@ function analyzeTypeMatchup() {
     // Calcular efectividad de Pokemon2 vs Pokemon1
     const p2vsP1 = calculateTypeEffectiveness(pokemon2.types, pokemon1.types);
     
-    let html = '<div class="row">';
+    // Formatear multiplicador
+    const formatMultiplier = (mult) => {
+        if (mult === 0) return { text: '0x', label: 'Sin efecto', class: 'bg-dark', icon: 'fa-ban' };
+        if (mult >= 2) return { text: `${mult.toFixed(1)}x`, label: 'Muy efectivo', class: 'bg-success', icon: 'fa-check-circle' };
+        if (mult <= 0.5) return { text: `${mult.toFixed(1)}x`, label: 'Poco efectivo', class: 'bg-danger', icon: 'fa-exclamation-triangle' };
+        return { text: `${mult.toFixed(1)}x`, label: 'Normal', class: 'bg-info', icon: 'fa-equals' };
+    };
     
-    // Pokemon1 vs Pokemon2
-    html += '<div class="col-12 mb-4">';
-    html += `<h6 class="text-success mb-3"><i class="fas fa-arrow-right me-2"></i>${pokemon1.name} → ${pokemon2.name}</h6>`;
-    html += `<div class="p-3 rounded ${p1vsP2 >= 2 ? 'bg-success bg-opacity-10 border border-success' : p1vsP2 <= 0.5 ? 'bg-danger bg-opacity-10 border border-danger' : 'bg-info bg-opacity-10 border border-info'}">`;
-    html += `<div class="d-flex justify-content-between align-items-center mb-2">`;
-    html += `<span><strong>Multiplicador de Daño:</strong></span>`;
-    html += `<span class="badge fs-6 ${p1vsP2 >= 2 ? 'bg-success' : p1vsP2 <= 0.5 ? 'bg-danger' : p1vsP2 === 0 ? 'bg-dark' : 'bg-info'}">${p1vsP2 === 0 ? '0x (Sin efecto)' : p1vsP2 >= 2 ? `${p1vsP2}x (Muy efectivo)` : p1vsP2 <= 0.5 ? `${p1vsP2}x (Poco efectivo)` : `${p1vsP2}x (Normal)`}</span>`;
-    html += `</div>`;
-    if (p1vsP2 >= 2) {
-        html += `<p class="mb-0 text-success"><i class="fas fa-check-circle me-2"></i><strong>¡Ventaja de tipo!</strong> Los ataques de ${pokemon1.name} son muy efectivos contra ${pokemon2.name}.</p>`;
-    } else if (p1vsP2 <= 0.5 && p1vsP2 > 0) {
-        html += `<p class="mb-0 text-danger"><i class="fas fa-exclamation-triangle me-2"></i><strong>Desventaja de tipo.</strong> Los ataques de ${pokemon1.name} son poco efectivos contra ${pokemon2.name}.</p>`;
-    } else if (p1vsP2 === 0) {
-        html += `<p class="mb-0 text-dark"><i class="fas fa-ban me-2"></i><strong>Sin efecto.</strong> Los ataques de ${pokemon1.name} no afectan a ${pokemon2.name}.</p>`;
-    } else {
-        html += `<p class="mb-0 text-info"><i class="fas fa-equals me-2"></i>Efectividad normal. Los ataques tienen daño estándar.</p>`;
-    }
-    html += `</div></div>`;
+    const mult1 = formatMultiplier(p1vsP2);
+    const mult2 = formatMultiplier(p2vsP1);
     
-    // Pokemon2 vs Pokemon1
-    html += '<div class="col-12">';
-    html += `<h6 class="text-danger mb-3"><i class="fas fa-arrow-left me-2"></i>${pokemon2.name} → ${pokemon1.name}</h6>`;
-    html += `<div class="p-3 rounded ${p2vsP1 >= 2 ? 'bg-success bg-opacity-10 border border-success' : p2vsP1 <= 0.5 ? 'bg-danger bg-opacity-10 border border-danger' : 'bg-info bg-opacity-10 border border-info'}">`;
-    html += `<div class="d-flex justify-content-between align-items-center mb-2">`;
-    html += `<span><strong>Multiplicador de Daño:</strong></span>`;
-    html += `<span class="badge fs-6 ${p2vsP1 >= 2 ? 'bg-success' : p2vsP1 <= 0.5 ? 'bg-danger' : p2vsP1 === 0 ? 'bg-dark' : 'bg-info'}">${p2vsP1 === 0 ? '0x (Sin efecto)' : p2vsP1 >= 2 ? `${p2vsP1}x (Muy efectivo)` : p2vsP1 <= 0.5 ? `${p2vsP1}x (Poco efectivo)` : `${p2vsP1}x (Normal)`}</span>`;
-    html += `</div>`;
-    if (p2vsP1 >= 2) {
-        html += `<p class="mb-0 text-success"><i class="fas fa-check-circle me-2"></i><strong>¡Ventaja de tipo!</strong> Los ataques de ${pokemon2.name} son muy efectivos contra ${pokemon1.name}.</p>`;
-    } else if (p2vsP1 <= 0.5 && p2vsP1 > 0) {
-        html += `<p class="mb-0 text-danger"><i class="fas fa-exclamation-triangle me-2"></i><strong>Desventaja de tipo.</strong> Los ataques de ${pokemon2.name} son poco efectivos contra ${pokemon1.name}.</p>`;
-    } else if (p2vsP1 === 0) {
-        html += `<p class="mb-0 text-dark"><i class="fas fa-ban me-2"></i><strong>Sin efecto.</strong> Los ataques de ${pokemon2.name} no afectan a ${pokemon1.name}.</p>`;
-    } else {
-        html += `<p class="mb-0 text-info"><i class="fas fa-equals me-2"></i>Efectividad normal. Los ataques tienen daño estándar.</p>`;
-    }
-    html += `</div></div></div>`;
+    let html = '<div class="type-matchup-simple">';
+    
+    // Pokemon1 vs Pokemon2 - Versión simplificada
+    html += `
+        <div class="matchup-item mb-3 p-3 rounded ${p1vsP2 >= 2 ? 'bg-success bg-opacity-10 border border-success' : p1vsP2 <= 0.5 ? 'bg-danger bg-opacity-10 border border-danger' : 'bg-light border border-secondary'}">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <strong class="text-success">${pokemon1.name}</strong>
+                    <span class="mx-2">→</span>
+                    <strong>${pokemon2.name}</strong>
+                </div>
+                <span class="badge ${mult1.class} fs-6 px-3 py-2">
+                    <i class="fas ${mult1.icon} me-1"></i> ${mult1.text}
+                </span>
+            </div>
+        </div>
+    `;
+    
+    // Pokemon2 vs Pokemon1 - Versión simplificada
+    html += `
+        <div class="matchup-item p-3 rounded ${p2vsP1 >= 2 ? 'bg-success bg-opacity-10 border border-success' : p2vsP1 <= 0.5 ? 'bg-danger bg-opacity-10 border border-danger' : 'bg-light border border-secondary'}">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <strong class="text-danger">${pokemon2.name}</strong>
+                    <span class="mx-2">→</span>
+                    <strong>${pokemon1.name}</strong>
+                </div>
+                <span class="badge ${mult2.class} fs-6 px-3 py-2">
+                    <i class="fas ${mult2.icon} me-1"></i> ${mult2.text}
+                </span>
+            </div>
+        </div>
+    `;
+    
+    html += '</div>';
     
     container.innerHTML = html;
 }
@@ -491,29 +462,31 @@ function compareTypes() {
     const strong1 = pokemon1.type_effectiveness.strong_against || [];
     const strong2 = pokemon2.type_effectiveness.strong_against || [];
     
-    let advHtml = `<div class="mb-3">
-        <h6 class="text-success mb-2"><i class="fas fa-user me-2"></i>${pokemon1.name}</h6>`;
-    if (strong1.length > 0) {
-        advHtml += '<div class="d-flex flex-wrap gap-2 mb-3">';
-        strong1.forEach(type => {
-            advHtml += `<span class="badge" style="background: ${getTypeColor(type)}; color: white; font-size: 0.85rem; padding: 0.5rem 0.75rem;">${type}</span>`;
-        });
-        advHtml += '</div>';
-    } else {
-        advHtml += '<p class="text-muted small mb-3">Ninguno</p>';
-    }
-    
-    advHtml += `<h6 class="text-danger mb-2"><i class="fas fa-user-friends me-2"></i>${pokemon2.name}</h6>`;
-    if (strong2.length > 0) {
-        advHtml += '<div class="d-flex flex-wrap gap-2">';
-        strong2.forEach(type => {
-            advHtml += `<span class="badge" style="background: ${getTypeColor(type)}; color: white; font-size: 0.85rem; padding: 0.5rem 0.75rem;">${type}</span>`;
-        });
-        advHtml += '</div>';
-    } else {
-        advHtml += '<p class="text-muted small">Ninguno</p>';
-    }
-    advHtml += '</div>';
+    // Ventajas: Tipos contra los que cada Pokémon es super efectivo
+    let advHtml = `
+        <div class="type-advantage-card mb-3 p-3 rounded border border-success border-2">
+            <div class="d-flex align-items-center mb-2">
+                <i class="fas fa-user text-success me-2"></i>
+                <strong>${pokemon1.name}</strong>
+                <span class="ms-2 text-muted small">es super efectivo contra:</span>
+            </div>
+            ${strong1.length > 0 ? 
+                `<div class="d-flex flex-wrap gap-2">${strong1.map(type => `<span class="badge" style="background: ${getTypeColor(type)}; color: white; font-size: 0.9rem; padding: 0.5rem 0.75rem;">${type}</span>`).join('')}</div>` : 
+                '<p class="text-muted mb-0"><small>Ningún tipo en particular</small></p>'
+            }
+        </div>
+        <div class="type-advantage-card p-3 rounded border border-danger border-2">
+            <div class="d-flex align-items-center mb-2">
+                <i class="fas fa-user-friends text-danger me-2"></i>
+                <strong>${pokemon2.name}</strong>
+                <span class="ms-2 text-muted small">es super efectivo contra:</span>
+            </div>
+            ${strong2.length > 0 ? 
+                `<div class="d-flex flex-wrap gap-2">${strong2.map(type => `<span class="badge" style="background: ${getTypeColor(type)}; color: white; font-size: 0.9rem; padding: 0.5rem 0.75rem;">${type}</span>`).join('')}</div>` : 
+                '<p class="text-muted mb-0"><small>Ningún tipo en particular</small></p>'
+            }
+        </div>
+    `;
     
     advantages.innerHTML = advHtml;
     
@@ -521,70 +494,48 @@ function compareTypes() {
     const weak2 = pokemon2.type_defenses?.weak_to || [];
     const resist1 = pokemon1.type_defenses?.resistant_to || [];
     const resist2 = pokemon2.type_defenses?.resistant_to || [];
-    const immune1 = pokemon1.type_defenses?.immune_to || [];
-    const immune2 = pokemon2.type_defenses?.immune_to || [];
     
-    let defHtml = `<div>
-        <h6 class="text-success mb-2"><i class="fas fa-user me-2"></i>${pokemon1.name}</h6>
-        <p class="small mb-1"><strong>Débil contra:</strong></p>`;
-    if (weak1.length > 0) {
-        defHtml += '<div class="d-flex flex-wrap gap-2 mb-2">';
-        weak1.forEach(type => {
-            defHtml += `<span class="badge bg-danger" style="font-size: 0.8rem; padding: 0.4rem 0.6rem;">${type}</span>`;
-        });
-        defHtml += '</div>';
-    } else {
-        defHtml += '<p class="text-muted small mb-2">Ninguno</p>';
-    }
-    defHtml += '<p class="small mb-1"><strong>Resistente a:</strong></p>';
-    if (resist1.length > 0) {
-        defHtml += '<div class="d-flex flex-wrap gap-2 mb-3">';
-        resist1.forEach(type => {
-            defHtml += `<span class="badge" style="background: ${getTypeColor(type)}; color: white; font-size: 0.8rem; padding: 0.4rem 0.6rem;">${type}</span>`;
-        });
-        defHtml += '</div>';
-    } else {
-        defHtml += '<p class="text-muted small mb-3">Ninguno</p>';
-    }
-    if (immune1.length > 0) {
-        defHtml += '<p class="small mb-1"><strong>Inmune a:</strong></p>';
-        defHtml += '<div class="d-flex flex-wrap gap-2 mb-3">';
-        immune1.forEach(type => {
-            defHtml += `<span class="badge bg-dark" style="font-size: 0.8rem; padding: 0.4rem 0.6rem;">${type}</span>`;
-        });
-        defHtml += '</div>';
-    }
-    
-    defHtml += `<h6 class="text-danger mb-2"><i class="fas fa-user-friends me-2"></i>${pokemon2.name}</h6>
-        <p class="small mb-1"><strong>Débil contra:</strong></p>`;
-    if (weak2.length > 0) {
-        defHtml += '<div class="d-flex flex-wrap gap-2 mb-2">';
-        weak2.forEach(type => {
-            defHtml += `<span class="badge bg-danger" style="font-size: 0.8rem; padding: 0.4rem 0.6rem;">${type}</span>`;
-        });
-        defHtml += '</div>';
-    } else {
-        defHtml += '<p class="text-muted small mb-2">Ninguno</p>';
-    }
-    defHtml += '<p class="small mb-1"><strong>Resistente a:</strong></p>';
-    if (resist2.length > 0) {
-        defHtml += '<div class="d-flex flex-wrap gap-2 mb-3">';
-        resist2.forEach(type => {
-            defHtml += `<span class="badge" style="background: ${getTypeColor(type)}; color: white; font-size: 0.8rem; padding: 0.4rem 0.6rem;">${type}</span>`;
-        });
-        defHtml += '</div>';
-    } else {
-        defHtml += '<p class="text-muted small mb-3">Ninguno</p>';
-    }
-    if (immune2.length > 0) {
-        defHtml += '<p class="small mb-1"><strong>Inmune a:</strong></p>';
-        defHtml += '<div class="d-flex flex-wrap gap-2">';
-        immune2.forEach(type => {
-            defHtml += `<span class="badge bg-dark" style="font-size: 0.8rem; padding: 0.4rem 0.6rem;">${type}</span>`;
-        });
-        defHtml += '</div>';
-    }
-    defHtml += '</div>';
+    // Defensas: Tipos que hacen más daño y tipos que hacen menos daño
+    let defHtml = `
+        <div class="type-defense-card mb-3 p-3 rounded border border-warning border-2">
+            <div class="d-flex align-items-center mb-2">
+                <i class="fas fa-user text-success me-2"></i>
+                <strong>${pokemon1.name}</strong>
+            </div>
+            ${weak1.length > 0 ? `
+                <div class="mb-2">
+                    <span class="text-danger fw-bold"><i class="fas fa-exclamation-triangle me-1"></i> Débil contra:</span>
+                    <div class="d-flex flex-wrap gap-2 mt-1">${weak1.map(type => `<span class="badge bg-danger" style="font-size: 0.85rem; padding: 0.4rem 0.65rem;">${type}</span>`).join('')}</div>
+                </div>
+            ` : ''}
+            ${resist1.length > 0 ? `
+                <div>
+                    <span class="text-success fw-bold"><i class="fas fa-shield-alt me-1"></i> Resistente a:</span>
+                    <div class="d-flex flex-wrap gap-2 mt-1">${resist1.map(type => `<span class="badge" style="background: ${getTypeColor(type)}; color: white; font-size: 0.85rem; padding: 0.4rem 0.65rem;">${type}</span>`).join('')}</div>
+                </div>
+            ` : ''}
+            ${weak1.length === 0 && resist1.length === 0 ? '<p class="text-muted mb-0"><small>Sin defensas especiales</small></p>' : ''}
+        </div>
+        <div class="type-defense-card p-3 rounded border border-warning border-2">
+            <div class="d-flex align-items-center mb-2">
+                <i class="fas fa-user-friends text-danger me-2"></i>
+                <strong>${pokemon2.name}</strong>
+            </div>
+            ${weak2.length > 0 ? `
+                <div class="mb-2">
+                    <span class="text-danger fw-bold"><i class="fas fa-exclamation-triangle me-1"></i> Débil contra:</span>
+                    <div class="d-flex flex-wrap gap-2 mt-1">${weak2.map(type => `<span class="badge bg-danger" style="font-size: 0.85rem; padding: 0.4rem 0.65rem;">${type}</span>`).join('')}</div>
+                </div>
+            ` : ''}
+            ${resist2.length > 0 ? `
+                <div>
+                    <span class="text-success fw-bold"><i class="fas fa-shield-alt me-1"></i> Resistente a:</span>
+                    <div class="d-flex flex-wrap gap-2 mt-1">${resist2.map(type => `<span class="badge" style="background: ${getTypeColor(type)}; color: white; font-size: 0.85rem; padding: 0.4rem 0.65rem;">${type}</span>`).join('')}</div>
+                </div>
+            ` : ''}
+            ${weak2.length === 0 && resist2.length === 0 ? '<p class="text-muted mb-0"><small>Sin defensas especiales</small></p>' : ''}
+        </div>
+    `;
     
     defenses.innerHTML = defHtml;
 }
@@ -593,106 +544,211 @@ function generateRecommendation() {
     const container = document.getElementById('recommendation');
     if (!container) return;
     
-    const total1 = pokemon1.total_stats || 0;
-    const total2 = pokemon2.total_stats || 0;
+    const total1 = pokemon1.total_stats || Object.values(pokemon1.base_stats || {}).reduce((a, b) => a + b, 0);
+    const total2 = pokemon2.total_stats || Object.values(pokemon2.base_stats || {}).reduce((a, b) => a + b, 0);
     
-    // Calcular efectividad
+    // Calcular efectividad de tipos
     const p1vsP2 = calculateTypeEffectiveness(pokemon1.types, pokemon2.types);
     const p2vsP1 = calculateTypeEffectiveness(pokemon2.types, pokemon1.types);
     
-    // Calcular score para cada Pokémon
-    let score1 = 0;
-    let score2 = 0;
+    // Calcular velocidad
+    const speed1 = pokemon1.base_stats?.speed || 0;
+    const speed2 = pokemon2.base_stats?.speed || 0;
     
-    // Estadísticas totales (40% del score)
-    score1 += (total1 / 600) * 40;
-    score2 += (total2 / 600) * 40;
+    // Calcular score para cada Pokémon (0-100)
+    let score1 = 50; // Base 50%
+    let score2 = 50;
     
-    // Ventaja de tipo (30% del score)
-    if (p1vsP2 >= 2) score1 += 30;
-    else if (p1vsP2 <= 0.5 && p1vsP2 > 0) score1 += 10;
-    else if (p1vsP2 === 0) score1 += 0;
-    else score1 += 20;
+    // Ventaja de tipo (40 puntos)
+    if (p1vsP2 >= 2) {
+        score1 += 30; // Muy efectivo
+        score2 -= 15;
+    } else if (p1vsP2 >= 1.5) {
+        score1 += 20;
+        score2 -= 10;
+    } else if (p1vsP2 <= 0.5 && p1vsP2 > 0) {
+        score1 -= 15; // No muy efectivo
+        score2 += 10;
+    } else if (p1vsP2 === 0) {
+        score1 -= 20; // Inmune
+        score2 += 15;
+    }
     
-    if (p2vsP1 >= 2) score2 += 30;
-    else if (p2vsP1 <= 0.5 && p2vsP1 > 0) score2 += 10;
-    else if (p2vsP1 === 0) score2 += 0;
-    else score2 += 20;
+    if (p2vsP1 >= 2) {
+        score2 += 30;
+        score1 -= 15;
+    } else if (p2vsP1 >= 1.5) {
+        score2 += 20;
+        score1 -= 10;
+    } else if (p2vsP1 <= 0.5 && p2vsP1 > 0) {
+        score2 -= 15;
+        score1 += 10;
+    } else if (p2vsP1 === 0) {
+        score2 -= 20;
+        score1 += 15;
+    }
     
-    // Desventaja de tipo (30% del score - negativo)
-    if (p2vsP1 >= 2) score1 -= 30;
-    else if (p2vsP1 <= 0.5 && p2vsP1 > 0) score1 -= 10;
-    else if (p2vsP1 === 0) score1 -= 30;
-    else score1 -= 5;
+    // Velocidad (20 puntos)
+    const speedDiff = speed1 - speed2;
+    if (speedDiff > 20) {
+        score1 += 20;
+        score2 -= 10;
+    } else if (speedDiff > 0) {
+        score1 += 10;
+        score2 -= 5;
+    } else if (speedDiff < -20) {
+        score2 += 20;
+        score1 -= 10;
+    } else if (speedDiff < 0) {
+        score2 += 10;
+        score1 -= 5;
+    }
     
-    if (p1vsP2 >= 2) score2 -= 30;
-    else if (p1vsP2 <= 0.5 && p1vsP2 > 0) score2 -= 10;
-    else if (p1vsP2 === 0) score2 -= 30;
-    else score2 -= 5;
+    // Estadísticas totales (30 puntos)
+    const totalDiff = total1 - total2;
+    const totalMax = Math.max(total1, total2, 1);
+    const totalRatio = Math.abs(totalDiff) / totalMax;
     
-    // Normalizar scores
+    if (totalDiff > 50) {
+        score1 += 30;
+        score2 -= 15;
+    } else if (totalDiff > 0) {
+        score1 += Math.round(totalRatio * 30);
+        score2 -= Math.round(totalRatio * 15);
+    } else if (totalDiff < -50) {
+        score2 += 30;
+        score1 -= 15;
+    } else if (totalDiff < 0) {
+        score2 += Math.round(totalRatio * 30);
+        score1 -= Math.round(totalRatio * 15);
+    }
+    
+    // Normalizar scores a 0-100
     score1 = Math.max(0, Math.min(100, score1));
     score2 = Math.max(0, Math.min(100, score2));
     
-    const winner = score1 > score2 ? pokemon1 : score2 > score1 ? pokemon2 : null;
-    const diff = Math.abs(score1 - score2);
-    
-    let html = '';
-    let alertClass = '';
-    let icon = '';
-    
-    if (winner) {
-        const winnerScore = winner === pokemon1 ? score1 : score2;
-        const loserScore = winner === pokemon1 ? score2 : score1;
-        
-        html = `<div class="alert alert-${winner === pokemon1 ? 'success' : 'danger'} border-0 shadow-sm mb-3">
-            <h4 class="alert-heading"><i class="fas fa-trophy me-2"></i>¡${winner.name} tiene más probabilidades de ganar!</h4>
-            <hr>
-            <div class="row">
-                <div class="col-md-6">
-                    <h6><strong>Análisis Detallado:</strong></h6>
-                    <ul class="mb-0">
-                        <li><strong>Estadísticas:</strong> ${winner === pokemon1 ? total1 : total2} vs ${winner === pokemon1 ? total2 : total1} (${Math.abs(total1 - total2)} puntos de diferencia)</li>
-                        <li><strong>Ventaja de Tipo:</strong> ${winner === pokemon1 ? (p1vsP2 >= 2 ? `Sí (${p1vsP2}x efectivo)` : p1vsP2 <= 0.5 ? `No (${p1vsP2}x efectivo)` : 'Neutral') : (p2vsP1 >= 2 ? `Sí (${p2vsP1}x efectivo)` : p2vsP1 <= 0.5 ? `No (${p2vsP1}x efectivo)` : 'Neutral')}</li>
-                        <li><strong>Score de Victoria:</strong> ${winnerScore.toFixed(1)}% vs ${loserScore.toFixed(1)}%</li>
-                    </ul>
-                </div>
-                <div class="col-md-6">
-                    <h6><strong>Recomendación:</strong></h6>
-                    <p class="mb-0">${winner === pokemon1 ? 
-                        (p1vsP2 >= 2 ? `${pokemon1.name} tiene una ventaja significativa debido a sus tipos y estadísticas superiores.` : 
-                         total1 > total2 ? `${pokemon1.name} tiene mejores estadísticas generales, lo que le da una ventaja sólida.` :
-                         `${pokemon1.name} tiene una ligera ventaja general.`) :
-                        (p2vsP1 >= 2 ? `${pokemon2.name} tiene una ventaja significativa debido a sus tipos y estadísticas superiores.` : 
-                         total2 > total1 ? `${pokemon2.name} tiene mejores estadísticas generales, lo que le da una ventaja sólida.` :
-                         `${pokemon2.name} tiene una ligera ventaja general.`)
-                    }</p>
-                </div>
-            </div>
-        </div>`;
-        alertClass = winner === pokemon1 ? 'alert-success' : 'alert-danger';
-        icon = 'fa-trophy';
+    // Normalizar para que sumen 100
+    const totalScore = score1 + score2;
+    if (totalScore > 0) {
+        score1 = Math.round((score1 / totalScore) * 100);
+        score2 = Math.round((score2 / totalScore) * 100);
     } else {
-        html = `<div class="alert alert-info border-0 shadow-sm">
-            <h4 class="alert-heading"><i class="fas fa-balance-scale me-2"></i>¡Enfrentamiento Equilibrado!</h4>
-            <hr>
-            <p class="mb-0">Ambos Pokémon tienen ventajas y desventajas similares. El resultado dependerá de factores como movimientos específicos, estrategia, niveles y estadísticas individuales (IVs/EVs). Este es un enfrentamiento muy equilibrado donde la estrategia será clave.</p>
-        </div>`;
-        alertClass = 'alert-info';
-        icon = 'fa-balance-scale';
+        score1 = 50;
+        score2 = 50;
     }
     
+    // Determinar ganador y razones
+    const winner = score1 > score2 ? pokemon1 : score2 > score1 ? pokemon2 : null;
+    const winnerScore = winner === pokemon1 ? score1 : score2;
+    const reasons = [];
+    
+    if (winner) {
+        if (winner === pokemon1) {
+            if (p1vsP2 >= 2) reasons.push('ventaja de tipo');
+            if (speed1 > speed2) reasons.push('velocidad');
+            if (total1 > total2) reasons.push('mejores estadísticas');
+        } else {
+            if (p2vsP1 >= 2) reasons.push('ventaja de tipo');
+            if (speed2 > speed1) reasons.push('velocidad');
+            if (total2 > total1) reasons.push('mejores estadísticas');
+        }
+    }
+    
+    let html = '<div class="recommendation-final">';
+    
+    if (winner) {
+        html += `
+            <div class="verdict-box ${winner === pokemon1 ? 'verdict-success' : 'verdict-danger'}">
+                <h4 class="verdict-title">
+                    <i class="fas fa-trophy me-2"></i>Veredicto Final
+                </h4>
+                <div class="verdict-content">
+                    <p class="verdict-text">
+                        Tu <strong>${winner.name}</strong> tiene un <strong>${winnerScore}%</strong> de probabilidad de ganar
+                        ${reasons.length > 0 ? 'debido a su ' + reasons.join(' y ') + '.' : '.'}
+                    </p>
+                    <div class="probability-bars mt-3">
+                        <div class="probability-bar-item mb-2">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span>${pokemon1.name}</span>
+                                <span><strong>${score1}%</strong></span>
+                            </div>
+                            <div class="progress" style="height: 20px;">
+                                <div class="progress-bar ${score1 > score2 ? 'bg-success' : 'bg-secondary'}" 
+                                     style="width: ${score1}%"></div>
+                            </div>
+                        </div>
+                        <div class="probability-bar-item">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span>${pokemon2.name}</span>
+                                <span><strong>${score2}%</strong></span>
+                            </div>
+                            <div class="progress" style="height: 20px;">
+                                <div class="progress-bar ${score2 > score1 ? 'bg-success' : 'bg-secondary'}" 
+                                     style="width: ${score2}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    } else {
+        html += `
+            <div class="verdict-box verdict-info">
+                <h4 class="verdict-title">
+                    <i class="fas fa-balance-scale me-2"></i>Enfrentamiento Equilibrado
+                </h4>
+                <div class="verdict-content">
+                    <p class="verdict-text">
+                        Ambos Pokémon tienen probabilidades similares de ganar (${score1}% vs ${score2}%).
+                        El resultado dependerá de la estrategia y movimientos utilizados.
+                    </p>
+                </div>
+            </div>
+        `;
+    }
+    
+    html += '</div>';
     container.innerHTML = html;
 }
 
-function getTypeColor(type) {
-    const colors = {
-        'Normal': '#9CA3AF', 'Fuego': '#C2410C', 'Agua': '#0369A1',
-        'Eléctrico': '#CA8A04', 'Planta': '#16A34A', 'Hielo': '#0E7490',
-        'Lucha': '#991B1B', 'Veneno': '#7C3AED', 'Tierra': '#92400E',
-        'Volador': '#6366F1', 'Psíquico': '#BE185D', 'Bicho': '#65A30D',
-        'Roca': '#A16207', 'Fantasma': '#5B21B6', 'Dragón': '#4338CA',
-        'Siniestro': '#374151', 'Acero': '#6B7280', 'Hada': '#DB2777'
-    };
-    return colors[type] || '#68A090';
+function removeAnalysisBox() {
+    // Buscar y eliminar el cuadro "Análisis de Enfrentamiento"
+    const comparisonResults = document.getElementById('comparison-results');
+    if (!comparisonResults) return;
+    
+    // Buscar todos los elementos que contengan "Análisis de Enfrentamiento"
+    const allCards = comparisonResults.querySelectorAll('.card');
+    allCards.forEach(card => {
+        const header = card.querySelector('.card-header');
+        if (header && header.textContent.includes('Análisis de Enfrentamiento')) {
+            card.remove();
+        }
+    });
+    
+    // También buscar por elementos con id o clase relacionada
+    const analysisBox = document.getElementById('type-effectiveness-analysis');
+    if (analysisBox) {
+        const parentCard = analysisBox.closest('.card');
+        if (parentCard) {
+            parentCard.remove();
+        } else {
+            analysisBox.remove();
+        }
+    }
+    
+    // Buscar por texto en el contenido
+    const allElements = comparisonResults.querySelectorAll('*');
+    allElements.forEach(element => {
+        if (element.textContent && element.textContent.includes('Análisis de Enfrentamiento')) {
+            // Si es un card o tiene un padre card, eliminar el card completo
+            const card = element.closest('.card');
+            if (card && card.querySelector('.card-header') && 
+                card.querySelector('.card-header').textContent.includes('Análisis de Enfrentamiento')) {
+                card.remove();
+            }
+        }
+    });
 }
+
+// getTypeColor está definido en utils.js
