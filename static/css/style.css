@@ -1,0 +1,2407 @@
+/* PokéCompanion: Rojo Fuego - Estilos con Paletas Dinámicas */
+
+:root {
+    /* Paleta de colores Rojo Fuego - Inspirada en Pokémon Edición Rojo Fuego */
+    --red-primary: #E63946;      /* Rojo principal */
+    --red-dark: #C1121F;         /* Rojo oscuro */
+    --red-light: #F77F00;        /* Naranja fuego */
+    --fire-orange: #FCBF49;      /* Amarillo fuego */
+    --white: #FFFFFF;
+    --black: #1A1A1A;
+    --gray-light: #F5F5F5;
+    --gray-medium: #737373;
+    --gray-dark: #404040;
+    
+    /* Colores Pokédex - Estilo Game Boy */
+    --pokedex-red: #E63946;
+    --pokedex-dark-red: #A4161A;
+    --pokedex-orange: #F77F00;
+    --pokedex-yellow: #FFB627;
+    --pokedex-bg-dark: #1A1A1A;
+    --pokedex-bg-light: #2D2D2D;
+    --pokedex-screen: #E8E8E8;
+    
+    /* Paletas por tipo - Versiones elegantes y profesionales con mejor legibilidad */
+    /* Normal - Grises neutros elegantes */
+    --normal-gray-1: #6B7280;
+    --normal-gray-2: #9CA3AF;
+    --normal-gray-3: #E5E7EB;
+    
+    /* Fuego - Rojos cálidos elegantes */
+    --fire-red: #B91C1C;
+    --fire-orange: #DC2626;
+    --fire-orange-light: #EF4444;
+    --fire-yellow: #F97316;
+    --fire-yellow-light: #FED7AA;
+    
+    /* Agua - Azules oceánicos elegantes */
+    --water-blue-1: #075985;
+    --water-blue-2: #0C4A6E;
+    --water-blue-3: #0284C7;
+    --water-blue-4: #38BDF8;
+    --water-blue-5: #E0F2FE;
+    
+    /* Eléctrico - Amarillos dorados elegantes */
+    --electric-yellow-1: #A16207;
+    --electric-yellow-2: #CA8A04;
+    --electric-yellow-3: #FCD34D;
+    
+    /* Planta - Verdes naturales elegantes */
+    --grass-green-1: #166534;
+    --grass-green-2: #16A34A;
+    --grass-green-3: #86EFAC;
+    
+    /* Hielo - Azules glaciales elegantes */
+    --ice-blue-1: #0C4A6E;
+    --ice-blue-2: #0891B2;
+    --ice-blue-3: #A5F3FC;
+    
+    /* Lucha - Rojos terracota elegantes */
+    --fighting-red-1: #7F1D1D;
+    --fighting-red-2: #991B1B;
+    --fighting-red-3: #FCA5A5;
+    
+    /* Veneno - Morados elegantes */
+    --poison-purple-1: #581C87;
+    --poison-purple-2: #7C3AED;
+    --poison-purple-3: #DDD6FE;
+    
+    /* Tierra - Cafés terrosos elegantes */
+    --ground-brown-1: #78350F;
+    --ground-brown-2: #92400E;
+    --ground-brown-3: #B45309;
+    --ground-brown-4: #FCD34D;
+    --ground-brown-5: #FEF3C7;
+    
+    /* Volador - Azules cielo elegantes */
+    --flying-blue-1: #4338CA;
+    --flying-blue-2: #6366F1;
+    --flying-blue-3: #C7D2FE;
+    
+    /* Psíquico - Rosas elegantes */
+    --psychic-pink-1: #9F1239;
+    --psychic-pink-2: #BE185D;
+    --psychic-pink-3: #FBCFE8;
+    
+    /* Bicho - Verdes oliva elegantes */
+    --bug-green-1: #365314;
+    --bug-green-2: #65A30D;
+    --bug-green-3: #D9F99D;
+    
+    /* Roca - Marrones elegantes */
+    --rock-brown-1: #78350F;
+    --rock-brown-2: #A16207;
+    --rock-brown-3: #FDE68A;
+    
+    /* Fantasma - Morados oscuros elegantes */
+    --ghost-purple-1: #4C1D95;
+    --ghost-purple-2: #6D28D9;
+    --ghost-purple-3: #E9D5FF;
+    
+    /* Dragón - Azules índigo elegantes */
+    --dragon-blue-1: #312E81;
+    --dragon-blue-2: #4338CA;
+    --dragon-blue-3: #C7D2FE;
+    
+    /* Siniestro - Grises oscuros elegantes */
+    --dark-gray-1: #1F2937;
+    --dark-gray-2: #374151;
+    --dark-gray-3: #9CA3AF;
+    
+    /* Acero - Grises plateados elegantes */
+    --steel-gray-1: #4B5563;
+    --steel-gray-2: #6B7280;
+    --steel-gray-3: #E5E7EB;
+    
+    /* Hada - Rosas pastel elegantes */
+    --fairy-pink-1: #9F1239;
+    --fairy-pink-2: #DB2777;
+    --fairy-pink-3: #FCE7F3;
+    
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    --card-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Página inicial - Tema Rojo Fuego */
+body.index-page {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #8B0000 0%, #A4161A 25%, #C1121F 50%, #E63946 75%, #F77F00 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    color: var(--black);
+    position: relative;
+}
+
+body.index-page::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 30%, rgba(255, 182, 39, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(230, 57, 70, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(247, 127, 0, 0.1) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+body.index-page > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Body general (cuando no es página inicial) - Tema Rojo Fuego */
+body:not(.index-page):not(.pokemon-detail-page) {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #8B0000 0%, #C1121F 30%, #E63946 60%, #F77F00 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    color: #1A1A1A;
+    position: relative;
+}
+
+/* Efecto de textura de fuego sutil */
+body:not(.index-page):not(.pokemon-detail-page)::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(255, 182, 39, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(231, 57, 70, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(247, 127, 0, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+body:not(.index-page):not(.pokemon-detail-page) > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Navbar - Base - Estilo Rojo Fuego */
+.navbar {
+    background: linear-gradient(135deg, var(--pokedex-dark-red) 0%, var(--pokedex-red) 100%) !important;
+    border-bottom: 3px solid var(--pokedex-orange);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.brand-text {
+    color: var(--pokedex-yellow) !important;
+    margin: 0 5px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: #FFF8E1 !important;
+    font-weight: 500;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    transition: all 0.2s ease;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: var(--pokedex-yellow) !important;
+    text-shadow: 0 0 8px rgba(255, 182, 39, 0.8);
+    transform: translateY(-1px);
+}
+
+/* Main Content */
+.main-content {
+    min-height: calc(100vh - 200px);
+    padding-bottom: 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* Títulos principales - Estilo Rojo Fuego */
+.display-4,
+.display-5 {
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.display-4.text-white,
+.display-5.text-white {
+    text-shadow: 
+        3px 3px 6px rgba(0, 0, 0, 0.7),
+        0 0 20px rgba(230, 57, 70, 0.3);
+}
+
+.lead.text-white {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Cards - Base - Estilo Pokédex */
+.card {
+    border-radius: 12px;
+    border: 3px solid #E0E0E0;
+    transition: all 0.3s ease;
+    overflow: visible;
+    position: relative;
+    background: #FFFFFF;
+    color: #1F2937;
+    box-shadow: 
+        0 4px 6px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--pokedex-red), var(--pokedex-orange));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+        0 8px 16px rgba(230, 57, 70, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border-color: var(--pokedex-red);
+}
+
+.card:hover::before {
+    opacity: 0.1;
+}
+
+.search-main-card {
+    background: var(--white) !important;
+}
+
+.pokemon-header-card {
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+/* Asegurar legibilidad en todos los textos de cards */
+.card-body {
+    color: #1F2937;
+}
+
+.card-body p,
+.card-body strong,
+.card-body span:not(.badge):not(.type-badge):not(.type-mini) {
+    color: #1F2937;
+}
+
+.card-body strong {
+    color: #111827;
+    font-weight: 700;
+}
+
+/* Pokemon Grid */
+#pokemon-grid {
+    margin-top: 2rem;
+}
+
+.pokemon-card {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8F8F8 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 3px solid #E0E0E0;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 4px 6px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.pokemon-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--pokedex-red), var(--pokedex-orange), var(--pokedex-yellow));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    box-shadow: 0 2px 4px rgba(230, 57, 70, 0.5);
+}
+
+.pokemon-card:hover::before {
+    transform: scaleX(1);
+}
+
+.pokemon-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(230, 57, 70, 0.05) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.pokemon-card:hover::after {
+    opacity: 1;
+}
+
+.pokemon-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+        0 12px 24px rgba(230, 57, 70, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border-color: var(--pokedex-red);
+    background: linear-gradient(135deg, #FFFFFF 0%, #FFF8F0 100%);
+}
+
+.pokemon-card h5 {
+    margin-top: 1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.pokemon-card .types {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.pokemon-card .type-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+/* Search Container - Nuevo diseño con sugerencias a la derecha */
+.search-container {
+    position: relative;
+    z-index: 10;
+}
+
+/* Evitar superposiciones */
+.input-group {
+    position: relative;
+    z-index: 10;
+}
+
+.autocomplete-dropdown {
+    z-index: 1050 !important;
+}
+
+.card {
+    position: relative;
+    z-index: 1;
+}
+
+.navbar {
+    z-index: 1030;
+}
+
+/* Eliminar el espacio reservado anterior */
+.search-card-body {
+    overflow: visible !important;
+    position: relative;
+}
+
+/* Sugerencias a la derecha */
+.autocomplete-results-side {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-height: 60px;
+}
+
+.autocomplete-results-side .autocomplete-item {
+    padding: 0.75rem;
+    cursor: pointer;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.autocomplete-results-side .autocomplete-item:hover {
+    background: var(--gray-light);
+    border-color: var(--red-primary);
+    transform: translateX(5px);
+}
+
+.autocomplete-results-side .autocomplete-item .pokemon-name {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.autocomplete-results-side .autocomplete-item .pokemon-types {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.autocomplete-results-side .autocomplete-item .type-mini {
+    padding: 0.2rem 0.5rem;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+/* Ocultar dropdown antiguo solo para el buscador principal */
+.autocomplete-dropdown:not(.move-autocomplete-dropdown) {
+    display: none !important;
+}
+
+/* Autocomplete de movimientos - Diseño mejorado */
+.move-autocomplete-dropdown {
+    position: absolute;
+    display: none;
+    z-index: 1050;
+    width: 100%;
+    max-width: 100%;
+    background: white;
+    border: 3px solid var(--pokedex-red);
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    box-shadow: 
+        0 8px 16px rgba(230, 57, 70, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    overflow: hidden;
+    top: 100%;
+    left: 0;
+}
+
+.move-autocomplete-dropdown.show {
+    display: block;
+    padding: 0.75rem;
+}
+
+.move-autocomplete-item {
+    transition: all 0.2s ease;
+    padding: 0.75rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    margin-bottom: 0.5rem;
+}
+
+.move-autocomplete-item:last-child {
+    margin-bottom: 0;
+}
+
+.move-autocomplete-item:hover {
+    background-color: #f8f9fa !important;
+    border-color: var(--red-primary) !important;
+    transform: translateX(5px);
+    box-shadow: 0 4px 8px rgba(220, 38, 38, 0.2);
+}
+
+/* Contenedor de búsqueda de movimientos */
+.move-search-container {
+    position: relative;
+}
+
+/* Contenedor de resultados del análisis */
+.move-analysis-container {
+    min-height: 200px;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 2px dashed #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.move-analysis-container.loading {
+    border-color: var(--pokedex-red);
+    border-style: dashed;
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+}
+
+.move-analysis-container.has-content {
+    border: none;
+    background: transparent;
+    padding: 0;
+}
+
+/* Botones en página inicial */
+.btn-danger {
+    background: var(--red-primary);
+    border-color: var(--red-primary);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: var(--red-dark);
+    border-color: var(--red-dark);
+    color: white;
+}
+
+/* Filtros */
+.card-body .form-label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+/* Stats */
+.stat-item {
+    margin-bottom: 1rem;
+}
+
+.progress {
+    height: 10px;
+    border-radius: 8px;
+    background: #E8E8E8;
+    border: 1px solid #D0D0D0;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.progress-bar {
+    border-radius: 7px;
+    box-shadow: 
+        inset 0 -2px 4px rgba(0, 0, 0, 0.1),
+        0 2px 4px rgba(255, 255, 255, 0.3);
+    transition: width 0.6s ease;
+}
+
+.bg-purple {
+    background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 4px rgba(111, 66, 193, 0.3);
+}
+
+/* Tabs - Base - Diseño mejorado con texto blanco */
+.nav-tabs {
+    border-bottom: 3px solid rgba(255, 255, 255, 0.3);
+    background: transparent;
+    margin-bottom: 1.5rem;
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: #ffffff !important;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    font-size: 0.95rem;
+    border-radius: 8px 8px 0 0;
+    margin-right: 0.5rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.nav-tabs .nav-link:hover {
+    border-bottom-color: #ffffff;
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.nav-tabs .nav-link.active {
+    color: #ffffff !important;
+    border-bottom-color: #ffffff;
+    background: rgba(255, 255, 255, 0.25);
+    font-weight: 600;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Move Analysis - Diseño mejorado */
+.move-analysis-card {
+    margin-top: 0;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border-left: 5px solid;
+    color: #212529;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.move-analysis-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.move-analysis-container {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.move-analysis-container p,
+.move-analysis-container div,
+.move-analysis-container .reason-item,
+.move-analysis-container h5,
+.move-analysis-container h6 {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+
+.move-analysis-card.success {
+    background: #d4edda;
+    border-color: #28a745;
+    color: #155724;
+}
+
+.move-analysis-card.info {
+    background: #d1ecf1;
+    border-color: #17a2b8;
+    color: #0c5460;
+}
+
+.move-analysis-card.warning {
+    background: #fff3cd;
+    border-color: #ffc107;
+    color: #856404;
+}
+
+.move-analysis-card.danger {
+    background: #f8d7da;
+    border-color: #dc3545;
+    color: #721c24;
+}
+
+.move-analysis-card h5 {
+    margin-bottom: 1rem;
+    color: inherit;
+}
+
+.move-analysis-card .reason-item {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    color: inherit;
+}
+
+.move-analysis-card .reason-item:last-child {
+    border-bottom: none;
+}
+
+/* Footer - Estilo Rojo Fuego */
+.footer {
+    margin-top: auto;
+    background: linear-gradient(135deg, var(--pokedex-dark-red) 0%, var(--pokedex-bg-dark) 100%) !important;
+    border-top: 3px solid var(--pokedex-orange);
+    color: var(--white) !important;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--pokedex-yellow), transparent);
+}
+
+/* Footer para tipos específicos */
+body.type-ground .footer {
+    background: var(--ground-brown-1) !important;
+    border-top: 2px solid var(--ground-brown-3);
+    color: #F5E6D3 !important;
+}
+
+body.type-water .footer {
+    background: var(--water-blue-1) !important;
+    border-top: 2px solid var(--water-blue-3);
+    color: #E3F2FD !important;
+}
+
+body.type-fire .footer {
+    background: var(--fire-red) !important;
+    border-top: 2px solid var(--fire-orange);
+    color: #FFF3E0 !important;
+}
+
+/* Evolution Styles - Base */
+.evolution-card {
+    background: #f5f1e8;
+    border-radius: 15px;
+    border: 2px solid #8b6f47;
+    transition: all 0.3s ease;
+    color: #212529;
+}
+
+.evolution-card:hover {
+    border-color: var(--red-primary);
+    box-shadow: var(--card-shadow);
+}
+
+.evolution-method {
+    background: #f5f1e8;
+    border-radius: 10px;
+    border-left: 4px solid var(--red-primary);
+    color: #212529;
+}
+
+/* Evolution cards por tipo */
+body.type-ground .evolution-card {
+    background: linear-gradient(to bottom, #F5E6D3 0%, #FFFFFF 100%);
+    border-color: var(--ground-brown-3);
+}
+
+body.type-ground .evolution-card:hover {
+    border-color: var(--ground-brown-1);
+}
+
+body.type-ground .evolution-method {
+    background: linear-gradient(to bottom, #F5E6D3 0%, #FFFFFF 100%);
+    border-left-color: var(--ground-brown-1);
+}
+
+body.type-water .evolution-card {
+    background: linear-gradient(to bottom, #E3F2FD 0%, #FFFFFF 100%);
+    border-color: var(--water-blue-3);
+}
+
+body.type-water .evolution-card:hover {
+    border-color: var(--water-blue-1);
+}
+
+body.type-water .evolution-method {
+    background: linear-gradient(to bottom, #E3F2FD 0%, #FFFFFF 100%);
+    border-left-color: var(--water-blue-1);
+}
+
+body.type-fire .evolution-card {
+    background: linear-gradient(to bottom, #FFF3E0 0%, #FFFFFF 100%);
+    border-color: var(--fire-orange-light);
+}
+
+body.type-fire .evolution-card:hover {
+    border-color: var(--fire-red);
+}
+
+body.type-fire .evolution-method {
+    background: linear-gradient(to bottom, #FFF3E0 0%, #FFFFFF 100%);
+    border-left-color: var(--fire-red);
+}
+
+.method-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.level-badge {
+    background: var(--red-primary);
+    color: white;
+}
+
+.stone-badge {
+    background: #8b6f47;
+    color: white;
+}
+
+.trade-badge {
+    background: #6b4423;
+    color: white;
+}
+
+.friendship-badge {
+    background: #4a6741;
+    color: white;
+}
+
+.default-badge {
+    background: #a0826d;
+    color: white;
+}
+
+/* Card Headers - Base (página inicial) */
+.card-header.bg-primary {
+    background: var(--red-primary) !important;
+    color: var(--white) !important;
+}
+
+.card-header.bg-success {
+    background: #28a745 !important;
+    color: var(--white) !important;
+}
+
+.card-header.bg-info {
+    background: #17a2b8 !important;
+    color: var(--white) !important;
+}
+
+.card-header.bg-danger {
+    background: #dc3545 !important;
+    color: var(--white) !important;
+}
+
+.card-header.bg-dark {
+    background: #343a40 !important;
+    color: var(--white) !important;
+}
+
+/* Gradientes para headers de cards */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, var(--red-primary) 0%, var(--red-dark) 100%) !important;
+    color: var(--white) !important;
+}
+
+.bg-gradient-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+    color: var(--white) !important;
+}
+
+/* Cards de vista experto */
+.expert-stats-card,
+.expert-move-analyzer-card {
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.expert-stats-card:hover,
+.expert-move-analyzer-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.expert-stats-card .card-body,
+.expert-move-analyzer-card .card-body {
+    background: #ffffff;
+}
+
+/* Labels y valores de estadísticas */
+.stat-label {
+    font-size: 0.9rem;
+    color: #495057;
+}
+
+.stat-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #212529;
+    background: #f8f9fa;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+/* Buttons - Estilo Rojo Fuego */
+.btn-primary {
+    background: linear-gradient(135deg, var(--pokedex-red) 0%, var(--pokedex-dark-red) 100%);
+    border: 2px solid var(--pokedex-orange);
+    color: white;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 8px rgba(230, 57, 70, 0.3);
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--pokedex-dark-red) 0%, var(--pokedex-red) 100%);
+    border-color: var(--pokedex-yellow);
+    box-shadow: 0 6px 12px rgba(230, 57, 70, 0.5);
+    transform: translateY(-2px);
+    color: white;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--pokedex-red) 0%, var(--pokedex-dark-red) 100%);
+    border: 2px solid var(--pokedex-orange);
+    color: white;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 8px rgba(230, 57, 70, 0.3);
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, var(--pokedex-dark-red) 0%, var(--pokedex-red) 100%);
+    border-color: var(--pokedex-yellow);
+    box-shadow: 0 6px 12px rgba(230, 57, 70, 0.5);
+    transform: translateY(-2px);
+}
+
+/* Paletas por tipo de Pokémon - Aplicadas dinámicamente con psicología de colores */
+
+/* Tipo Tierra - Cafés terrosos elegantes */
+body.type-ground {
+    background: linear-gradient(135deg, #78350F 0%, #92400E 50%, #B45309 100%);
+    background-attachment: fixed;
+}
+
+/* Navbar para Tierra */
+body.type-ground .navbar {
+    background: var(--ground-brown-1) !important;
+    border-bottom: 2px solid var(--ground-brown-3);
+}
+
+body.type-ground .brand-text {
+    color: #F5E6D3 !important; /* Beige claro para contraste */
+}
+
+body.type-ground .navbar-dark .navbar-nav .nav-link {
+    color: #F5E6D3 !important;
+}
+
+body.type-ground .navbar-dark .navbar-nav .nav-link:hover {
+    color: var(--white) !important;
+}
+
+/* Cards para Tierra - Tono beige elegante con texto oscuro */
+body.type-ground .card {
+    background: #FFFFFF;
+    border: 2px solid #FCD34D;
+    box-shadow: 0 2px 4px rgba(146, 64, 14, 0.1);
+}
+
+body.type-ground .card:hover {
+    border-color: var(--ground-brown-1);
+    box-shadow: 0 6px 12px rgba(139, 69, 19, 0.3);
+}
+
+body.type-ground .card-body,
+body.type-ground .card-body p,
+body.type-ground .card-body li,
+body.type-ground .card-body span:not(.badge):not(.type-badge):not(.text-muted) {
+    color: #1F2937 !important; /* Gris oscuro para mejor legibilidad */
+    font-weight: 500;
+}
+
+body.type-ground .card-body strong {
+    color: #111827 !important;
+    font-weight: 700;
+}
+
+/* Headers de cards para Tierra */
+body.type-ground .pokemon-header-card,
+body.type-ground .card-header.bg-primary {
+    background: linear-gradient(135deg, var(--ground-brown-1) 0%, var(--ground-brown-2) 100%) !important;
+    color: var(--white) !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+body.type-ground .card-header.bg-success {
+    background: linear-gradient(135deg, #6B4423 0%, #8B4513 100%) !important;
+    color: var(--white) !important;
+}
+
+body.type-ground .card-header.bg-info {
+    background: linear-gradient(135deg, #A0522D 0%, #CD853F 100%) !important;
+    color: var(--white) !important;
+}
+
+body.type-ground .card-header.bg-danger {
+    background: linear-gradient(135deg, #8B4513 0%, #654321 100%) !important;
+    color: var(--white) !important;
+}
+
+body.type-ground .card-header.bg-dark {
+    background: linear-gradient(135deg, #3E2723 0%, #5D4037 100%) !important;
+    color: var(--white) !important;
+}
+
+/* Tabs y otros elementos */
+body.type-ground .nav-tabs .nav-link.active,
+body.type-ground .nav-tabs .nav-link:hover {
+    border-bottom-color: var(--ground-brown-1);
+    color: var(--ground-brown-1);
+}
+
+body.type-ground .pokemon-card:hover {
+    border-color: var(--ground-brown-1);
+}
+
+body.type-ground .btn-primary {
+    background: var(--ground-brown-1);
+    border-color: var(--ground-brown-1);
+    color: var(--white);
+}
+
+body.type-ground .btn-primary:hover {
+    background: var(--ground-brown-2);
+    border-color: var(--ground-brown-2);
+}
+
+/* Tipo Agua - Azules oceánicos elegantes */
+body.type-water {
+    background: linear-gradient(135deg, #0C4A6E 0%, #075985 50%, #0284C7 100%);
+    background-attachment: fixed;
+}
+
+/* Navbar para Agua */
+body.type-water .navbar {
+    background: var(--water-blue-1) !important;
+    border-bottom: 2px solid var(--water-blue-3);
+}
+
+body.type-water .brand-text {
+    color: #E3F2FD !important; /* Azul muy claro para contraste */
+}
+
+body.type-water .navbar-dark .navbar-nav .nav-link {
+    color: #E3F2FD !important;
+}
+
+body.type-water .navbar-dark .navbar-nav .nav-link:hover {
+    color: var(--white) !important;
+}
+
+/* Cards para Agua - Tono azul claro elegante con texto oscuro */
+body.type-water .card {
+    background: #FFFFFF;
+    border: 2px solid #38BDF8;
+    box-shadow: 0 2px 4px rgba(7, 89, 133, 0.1);
+}
+
+body.type-water .card:hover {
+    border-color: var(--water-blue-1);
+    box-shadow: 0 6px 12px rgba(30, 144, 255, 0.3);
+}
+
+body.type-water .card-body,
+body.type-water .card-body p,
+body.type-water .card-body li,
+body.type-water .card-body span:not(.badge):not(.type-badge):not(.text-muted) {
+    color: #1F2937 !important; /* Gris oscuro para mejor legibilidad */
+    font-weight: 500;
+}
+
+body.type-water .card-body strong {
+    color: #111827 !important;
+    font-weight: 700;
+}
+
+/* Headers de cards para Agua */
+body.type-water .pokemon-header-card,
+body.type-water .card-header.bg-primary {
+    background: linear-gradient(135deg, var(--water-blue-1) 0%, var(--water-blue-2) 100%) !important;
+    color: var(--white) !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+body.type-water .card-header.bg-success {
+    background: linear-gradient(135deg, #0277BD 0%, #0288D1 100%) !important;
+    color: var(--white) !important;
+}
+
+body.type-water .card-header.bg-info {
+    background: linear-gradient(135deg, #0288D1 0%, #03A9F4 100%) !important;
+    color: var(--white) !important;
+}
+
+body.type-water .card-header.bg-danger {
+    background: linear-gradient(135deg, #01579B 0%, #0277BD 100%) !important;
+    color: var(--white) !important;
+}
+
+body.type-water .card-header.bg-dark {
+    background: linear-gradient(135deg, #0D47A1 0%, #1565C0 100%) !important;
+    color: var(--white) !important;
+}
+
+/* Tabs y otros elementos */
+body.type-water .nav-tabs .nav-link.active,
+body.type-water .nav-tabs .nav-link:hover {
+    border-bottom-color: var(--water-blue-1);
+    color: var(--water-blue-1);
+}
+
+body.type-water .pokemon-card:hover {
+    border-color: var(--water-blue-1);
+}
+
+body.type-water .btn-primary {
+    background: var(--water-blue-1);
+    border-color: var(--water-blue-1);
+    color: var(--white);
+}
+
+body.type-water .btn-primary:hover {
+    background: var(--water-blue-2);
+    border-color: var(--water-blue-2);
+}
+
+/* Tipo Fuego - Rojos cálidos elegantes */
+body.type-fire {
+    background: linear-gradient(135deg, #7F1D1D 0%, #B91C1C 50%, #DC2626 100%);
+    background-attachment: fixed;
+}
+
+/* Navbar para Fuego */
+body.type-fire .navbar {
+    background: var(--fire-red) !important;
+    border-bottom: 2px solid var(--fire-orange);
+}
+
+body.type-fire .brand-text {
+    color: #FFF3E0 !important; /* Amarillo muy claro para contraste */
+}
+
+body.type-fire .navbar-dark .navbar-nav .nav-link {
+    color: #FFF3E0 !important;
+}
+
+body.type-fire .navbar-dark .navbar-nav .nav-link:hover {
+    color: var(--white) !important;
+}
+
+/* Cards para Fuego - Tono crema elegante con texto oscuro */
+body.type-fire .card {
+    background: #FFFFFF;
+    border: 2px solid #FED7AA;
+    box-shadow: 0 2px 4px rgba(185, 28, 28, 0.1);
+}
+
+body.type-fire .card:hover {
+    border-color: var(--fire-red);
+    box-shadow: 0 6px 12px rgba(220, 38, 38, 0.3);
+}
+
+body.type-fire .card-body,
+body.type-fire .card-body p,
+body.type-fire .card-body li,
+body.type-fire .card-body span:not(.badge):not(.type-badge):not(.text-muted) {
+    color: #1F2937 !important; /* Gris oscuro para mejor legibilidad */
+    font-weight: 500;
+}
+
+body.type-fire .card-body strong {
+    color: #111827 !important;
+    font-weight: 700;
+}
+
+/* Headers de cards para Fuego */
+body.type-fire .pokemon-header-card,
+body.type-fire .card-header.bg-primary {
+    background: linear-gradient(135deg, var(--fire-red) 0%, var(--fire-orange) 100%) !important;
+    color: var(--white) !important;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+body.type-fire .card-header.bg-success {
+    background: linear-gradient(135deg, #E64A19 0%, #FF5722 100%) !important;
+    color: var(--white) !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+body.type-fire .card-header.bg-info {
+    background: linear-gradient(135deg, #F57C00 0%, #FF9800 100%) !important;
+    color: var(--white) !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+body.type-fire .card-header.bg-danger {
+    background: linear-gradient(135deg, #C62828 0%, #D32F2F 100%) !important;
+    color: var(--white) !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+body.type-fire .card-header.bg-dark {
+    background: linear-gradient(135deg, #B71C1C 0%, #C62828 100%) !important;
+    color: var(--white) !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+/* Tabs y otros elementos */
+body.type-fire .nav-tabs .nav-link.active,
+body.type-fire .nav-tabs .nav-link:hover {
+    border-bottom-color: var(--fire-red);
+    color: var(--fire-red);
+}
+
+body.type-fire .pokemon-card:hover {
+    border-color: var(--fire-red);
+}
+
+body.type-fire .btn-primary {
+    background: var(--fire-red);
+    border-color: var(--fire-red);
+    color: var(--white);
+}
+
+body.type-fire .btn-primary:hover {
+    background: var(--fire-orange);
+    border-color: var(--fire-orange);
+}
+
+/* Textos especiales para Fuego (headers grandes) */
+body.type-fire h1,
+body.type-fire h2,
+body.type-fire h3,
+body.type-fire h4,
+body.type-fire h5,
+body.type-fire h6,
+body.type-fire .display-4 {
+    color: #B71C1C;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+}
+
+/* ============================================
+   PALETAS COMPLETAS PARA TODOS LOS TIPOS
+   ============================================ */
+
+/* Tipo Normal - Grises elegantes */
+body.type-normal {
+    background: linear-gradient(135deg, #4B5563 0%, #6B7280 50%, #9CA3AF 100%);
+    background-attachment: fixed;
+}
+
+body.type-normal .navbar {
+    background: var(--normal-gray-1) !important;
+    border-bottom: 2px solid var(--normal-gray-2);
+}
+
+body.type-normal .brand-text {
+    color: #F5F5F5 !important;
+}
+
+body.type-normal .navbar-dark .navbar-nav .nav-link {
+    color: #F5F5F5 !important;
+}
+
+body.type-normal .navbar-dark .navbar-nav .nav-link:hover {
+    color: var(--white) !important;
+}
+
+body.type-normal .card {
+    background: #FFFFFF;
+    border: 2px solid var(--normal-gray-2);
+    box-shadow: 0 2px 4px rgba(107, 114, 128, 0.1);
+}
+
+body.type-normal .card-body,
+body.type-normal .card-body p,
+body.type-normal .card-body li,
+body.type-normal .card-body span:not(.badge):not(.type-badge):not(.text-muted) {
+    color: #1F2937 !important;
+    font-weight: 500;
+}
+
+body.type-normal .card-body strong {
+    color: #111827 !important;
+    font-weight: 700;
+}
+
+body.type-normal .nav-tabs .nav-link.active,
+body.type-normal .nav-tabs .nav-link:hover {
+    border-bottom-color: var(--normal-gray-1);
+    color: var(--normal-gray-1);
+}
+
+body.type-normal .pokemon-header-card,
+body.type-normal .card-header.bg-primary {
+    background: linear-gradient(135deg, var(--normal-gray-1) 0%, var(--normal-gray-2) 100%) !important;
+    color: var(--white) !important;
+}
+
+/* Tipo Eléctrico - Amarillos dorados elegantes */
+body.type-electric {
+    background: linear-gradient(135deg, #854D0E 0%, #A16207 50%, #CA8A04 100%);
+    background-attachment: fixed;
+}
+
+body.type-electric .navbar {
+    background: var(--electric-yellow-1) !important;
+    border-bottom: 2px solid var(--electric-yellow-2);
+}
+
+body.type-electric .brand-text {
+    color: #1A1A1A !important;
+}
+
+body.type-electric .navbar-dark .navbar-nav .nav-link {
+    color: #1A1A1A !important;
+}
+
+body.type-electric .card {
+    background: #FFFFFF;
+    border: 2px solid var(--electric-yellow-2);
+    box-shadow: 0 2px 4px rgba(202, 138, 4, 0.1);
+}
+
+body.type-electric .card-body,
+body.type-electric .card-body p,
+body.type-electric .card-body li,
+body.type-electric .card-body span:not(.badge):not(.type-badge):not(.text-muted) {
+    color: #1F2937 !important;
+    font-weight: 500;
+}
+
+body.type-electric .card-body strong {
+    color: #111827 !important;
+    font-weight: 700;
+}
+
+body.type-electric .nav-tabs .nav-link.active,
+body.type-electric .nav-tabs .nav-link:hover {
+    border-bottom-color: var(--electric-yellow-1);
+    color: var(--electric-yellow-1);
+}
+
+body.type-electric .pokemon-header-card,
+body.type-electric .card-header.bg-primary {
+    background: linear-gradient(135deg, var(--electric-yellow-1) 0%, var(--electric-yellow-2) 100%) !important;
+    color: #1A1A1A !important;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
+}
+
+/* Tipo Planta - Verdes naturales elegantes */
+body.type-grass {
+    background: linear-gradient(135deg, #14532D 0%, #166534 50%, #16A34A 100%);
+    background-attachment: fixed;
+}
+
+body.type-grass .navbar {
+    background: var(--grass-green-1) !important;
+    border-bottom: 2px solid var(--grass-green-2);
+}
+
+body.type-grass .brand-text {
+    color: #F1F8E9 !important;
+}
+
+body.type-grass .navbar-dark .navbar-nav .nav-link {
+    color: #F1F8E9 !important;
+}
+
+body.type-grass .card {
+    background: #FFFFFF;
+    border: 2px solid var(--grass-green-2);
+    box-shadow: 0 2px 4px rgba(22, 163, 74, 0.1);
+}
+
+body.type-grass .card-body,
+body.type-grass .card-body p,
+body.type-grass .card-body li,
+body.type-grass .card-body span:not(.badge):not(.type-badge):not(.text-muted) {
+    color: #1F2937 !important;
+    font-weight: 500;
+}
+
+body.type-grass .card-body strong {
+    color: #111827 !important;
+    font-weight: 700;
+}
+
+body.type-grass .nav-tabs .nav-link.active,
+body.type-grass .nav-tabs .nav-link:hover {
+    border-bottom-color: var(--grass-green-1);
+    color: var(--grass-green-1);
+}
+
+body.type-grass .pokemon-header-card,
+body.type-grass .card-header.bg-primary {
+    background: linear-gradient(135deg, var(--grass-green-1) 0%, var(--grass-green-2) 100%) !important;
+    color: var(--white) !important;
+}
+
+/* Tipo Hielo - Azules claros */
+body.type-ice {
+    background: linear-gradient(135deg, var(--ice-blue-1) 0%, var(--ice-blue-2) 50%, var(--ice-blue-3) 100%);
+    background-attachment: fixed;
+}
+
+body.type-ice .navbar {
+    background: var(--ice-blue-1) !important;
+    border-bottom: 2px solid var(--ice-blue-2);
+}
+
+body.type-ice .brand-text {
+    color: #E0F2F1 !important;
+}
+
+body.type-ice .navbar-dark .navbar-nav .nav-link {
+    color: #E0F2F1 !important;
+}
+
+body.type-ice .card {
+    background: #FFFFFF;
+    border: 2px solid var(--ice-blue-2);
+    box-shadow: 0 2px 4px rgba(14, 116, 144, 0.1);
+}
+
+body.type-ice .card-body,
+body.type-ice .card-body p,
+body.type-ice .card-body li,
+body.type-ice .card-body span:not(.badge):not(.type-badge):not(.text-muted) {
+    color: #1F2937 !important;
+    font-weight: 500;
+}
+
+body.type-ice .card-body strong {
+    color: #111827 !important;
+    font-weight: 700;
+}
+
+body.type-ice .nav-tabs .nav-link.active,
+body.type-ice .nav-tabs .nav-link:hover {
+    border-bottom-color: var(--ice-blue-1);
+    color: var(--ice-blue-1);
+}
+
+body.type-ice .pokemon-header-card,
+body.type-ice .card-header.bg-primary {
+    background: linear-gradient(135deg, var(--ice-blue-1) 0%, var(--ice-blue-2) 100%) !important;
+    color: var(--white) !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+/* Tipo Lucha - Rojos terracota elegantes */
+body.type-fighting {
+    background: linear-gradient(135deg, #7F1D1D 0%, #991B1B 50%, #DC2626 100%);
+    background-attachment: fixed;
+}
+
+body.type-fighting .navbar {
+    background: var(--fighting-red-1) !important;
+    border-bottom: 2px solid var(--fighting-red-2);
+}
+
+body.type-fighting .brand-text {
+    color: #FFEBEE !important;
+}
+
+body.type-fighting .navbar-dark .navbar-nav .nav-link {
+    color: #FFEBEE !important;
+}
+
+body.type-fighting .card {
+    background: #FFFFFF;
+    border: 2px solid var(--fighting-red-2);
+    box-shadow: 0 2px 4px rgba(153, 27, 27, 0.1);
+}
+
+body.type-fighting .card-body,
+body.type-fighting .card-body p,
+body.type-fighting .card-body li,
+body.type-fighting .card-body span:not(.badge):not(.type-badge):not(.text-muted) {
+    color: #1F2937 !important;
+    font-weight: 500;
+}
+
+body.type-fighting .card-body strong {
+    color: #111827 !important;
+    font-weight: 700;
+}
+
+
+body.type-fighting .nav-tabs .nav-link.active,
+body.type-fighting .nav-tabs .nav-link:hover {
+    border-bottom-color: var(--fighting-red-1);
+    color: var(--fighting-red-1);
+}
+
+body.type-fighting .pokemon-header-card,
+body.type-fighting .card-header.bg-primary {
+    background: linear-gradient(135deg, var(--fighting-red-1) 0%, var(--fighting-red-2) 100%) !important;
+    color: var(--white) !important;
+}
+
+/* Tipo Veneno - Morados elegantes */
+body.type-poison {
+    background: linear-gradient(135deg, #4C1D95 0%, #581C87 50%, #7C3AED 100%);
+    background-attachment: fixed;
+}
+
+body.type-poison .navbar {
+    background: var(--poison-purple-1) !important;
+    border-bottom: 2px solid var(--poison-purple-2);
+}
+
+body.type-poison .brand-text {
+    color: #F3E5F5 !important;
+}
+
+body.type-poison .navbar-dark .navbar-nav .nav-link {
+    color: #F3E5F5 !important;
+}
+
+body.type-poison .card {
+    background: #FFFFFF;
+    border: 2px solid var(--poison-purple-2);
+    box-shadow: 0 2px 4px rgba(124, 58, 237, 0.1);
+}
+
+body.type-poison .card-body,
+body.type-poison .card-body p,
+body.type-poison .card-body li,
+body.type-poison .card-body span:not(.badge):not(.type-badge):not(.text-muted) {
+    color: #1F2937 !important;
+    font-weight: 500;
+}
+
+body.type-poison .card-body strong {
+    color: #111827 !important;
+    font-weight: 700;
+}
+
+
+body.type-poison .nav-tabs .nav-link.active,
+body.type-poison .nav-tabs .nav-link:hover {
+    border-bottom-color: var(--poison-purple-1);
+    color: var(--poison-purple-1);
+}
+
+body.type-poison .pokemon-header-card,
+body.type-poison .card-header.bg-primary {
+    background: linear-gradient(135deg, var(--poison-purple-1) 0%, var(--poison-purple-2) 100%) !important;
+    color: var(--white) !important;
+}
+
+/* Tipo Volador - Azules suaves */
+body.type-flying {
+    background: linear-gradient(135deg, var(--flying-blue-1) 0%, var(--flying-blue-2) 50%, var(--flying-blue-3) 100%);
+    background-attachment: fixed;
+}
+
+body.type-flying .navbar {
+    background: var(--flying-blue-1) !important;
+    border-bottom: 2px solid var(--flying-blue-2);
+}
+
+body.type-flying .brand-text {
+    color: #E3F2FD !important;
+}
+
+body.type-flying .navbar-dark .navbar-nav .nav-link {
+    color: #E3F2FD !important;
+}
+
+body.type-flying .card {
+    background: #FFFFFF;
+    border: 2px solid var(--flying-blue-2);
+    box-shadow: 0 2px 4px rgba(99, 102, 241, 0.1);
+}
+
+body.type-flying .card-body,
+body.type-flying .card-body p,
+body.type-flying .card-body li,
+body.type-flying .card-body span:not(.badge):not(.type-badge):not(.text-muted) {
+    color: #1F2937 !important;
+    font-weight: 500;
+}
+
+body.type-flying .card-body strong {
+    color: #111827 !important;
+    font-weight: 700;
+}
+
+body.type-flying .card-body,
+body.type-flying .card-body p,
+body.type-flying .card-body strong,
+body.type-flying .card-body span:not(.badge):not(.type-badge) {
+    color: #0D47A1;
+}
+
+body.type-flying .nav-tabs .nav-link.active,
+body.type-flying .nav-tabs .nav-link:hover {
+    border-bottom-color: var(--flying-blue-1);
+    color: var(--flying-blue-1);
+}
+
+body.type-flying .pokemon-header-card,
+body.type-flying .card-header.bg-primary {
+    background: linear-gradient(135deg, var(--flying-blue-1) 0%, var(--flying-blue-2) 100%) !important;
+    color: var(--white) !important;
+}
+
+/* Tipo Psíquico - Rosas elegantes */
+body.type-psychic {
+    background: linear-gradient(135deg, #831843 0%, #9F1239 50%, #BE185D 100%);
+    background-attachment: fixed;
+}
+
+body.type-psychic .navbar {
+    background: var(--psychic-pink-1) !important;
+    border-bottom: 2px solid var(--psychic-pink-2);
+}
+
+body.type-psychic .brand-text {
+    color: #FCE4EC !important;
+}
+
+body.type-psychic .navbar-dark .navbar-nav .nav-link {
+    color: #FCE4EC !important;
+}
+
+body.type-psychic .card {
+    background: #FFFFFF;
+    border: 2px solid var(--psychic-pink-2);
+    box-shadow: 0 2px 4px rgba(190, 24, 93, 0.1);
+}
+
+body.type-psychic .card-body,
+body.type-psychic .card-body p,
+body.type-psychic .card-body li,
+body.type-psychic .card-body span:not(.badge):not(.type-badge):not(.text-muted) {
+    color: #1F2937 !important;
+    font-weight: 500;
+}
+
+body.type-psychic .card-body strong {
+    color: #111827 !important;
+    font-weight: 700;
+}
+
+
+body.type-psychic .nav-tabs .nav-link.active,
+body.type-psychic .nav-tabs .nav-link:hover {
+    border-bottom-color: var(--psychic-pink-1);
+    color: var(--psychic-pink-1);
+}
+
+body.type-psychic .pokemon-header-card,
+body.type-psychic .card-header.bg-primary {
+    background: linear-gradient(135deg, var(--psychic-pink-1) 0%, var(--psychic-pink-2) 100%) !important;
+    color: var(--white) !important;
+}
+
+/* Tipo Bicho - Verdes oliva */
+body.type-bug {
+    background: linear-gradient(135deg, var(--bug-green-1) 0%, var(--bug-green-2) 50%, var(--bug-green-3) 100%);
+    background-attachment: fixed;
+}
+
+body.type-bug .navbar {
+    background: var(--bug-green-1) !important;
+    border-bottom: 2px solid var(--bug-green-2);
+}
+
+body.type-bug .brand-text {
+    color: #F1F8E9 !important;
+}
+
+body.type-bug .navbar-dark .navbar-nav .nav-link {
+    color: #F1F8E9 !important;
+}
+
+body.type-bug .card {
+    background: #FFFFFF;
+    border: 2px solid var(--bug-green-2);
+    box-shadow: 0 2px 4px rgba(101, 163, 13, 0.1);
+}
+
+body.type-bug .card-body,
+body.type-bug .card-body p,
+body.type-bug .card-body li,
+body.type-bug .card-body span:not(.badge):not(.type-badge):not(.text-muted) {
+    color: #1F2937 !important;
+    font-weight: 500;
+}
+
+body.type-bug .card-body strong {
+    color: #111827 !important;
+    font-weight: 700;
+}
+
+
+body.type-bug .nav-tabs .nav-link.active,
+body.type-bug .nav-tabs .nav-link:hover {
+    border-bottom-color: var(--bug-green-1);
+    color: var(--bug-green-1);
+}
+
+body.type-bug .pokemon-header-card,
+body.type-bug .card-header.bg-primary {
+    background: linear-gradient(135deg, var(--bug-green-1) 0%, var(--bug-green-2) 100%) !important;
+    color: var(--white) !important;
+}
+
+/* Tipo Roca - Marrones elegantes */
+body.type-rock {
+    background: linear-gradient(135deg, #78350F 0%, #92400E 50%, #A16207 100%);
+    background-attachment: fixed;
+}
+
+body.type-rock .navbar {
+    background: var(--rock-brown-1) !important;
+    border-bottom: 2px solid var(--rock-brown-2);
+}
+
+body.type-rock .brand-text {
+    color: #FFF8E1 !important;
+}
+
+body.type-rock .navbar-dark .navbar-nav .nav-link {
+    color: #FFF8E1 !important;
+}
+
+body.type-rock .card {
+    background: #FFFFFF;
+    border: 2px solid var(--rock-brown-2);
+    box-shadow: 0 2px 4px rgba(161, 98, 7, 0.1);
+}
+
+body.type-rock .card-body,
+body.type-rock .card-body p,
+body.type-rock .card-body li,
+body.type-rock .card-body span:not(.badge):not(.type-badge):not(.text-muted) {
+    color: #1F2937 !important;
+    font-weight: 500;
+}
+
+body.type-rock .card-body strong {
+    color: #111827 !important;
+    font-weight: 700;
+}
+
+body.type-rock .card-body,
+body.type-rock .card-body p,
+body.type-rock .card-body strong,
+body.type-rock .card-body span:not(.badge):not(.type-badge) {
+    color: #5D4037;
+}
+
+body.type-rock .nav-tabs .nav-link.active,
+body.type-rock .nav-tabs .nav-link:hover {
+    border-bottom-color: var(--rock-brown-1);
+    color: var(--rock-brown-1);
+}
+
+body.type-rock .pokemon-header-card,
+body.type-rock .card-header.bg-primary {
+    background: linear-gradient(135deg, var(--rock-brown-1) 0%, var(--rock-brown-2) 100%) !important;
+    color: var(--white) !important;
+}
+
+/* Tipo Fantasma - Morados oscuros */
+body.type-ghost {
+    background: linear-gradient(135deg, var(--ghost-purple-1) 0%, var(--ghost-purple-2) 50%, var(--ghost-purple-3) 100%);
+    background-attachment: fixed;
+}
+
+body.type-ghost .navbar {
+    background: var(--ghost-purple-1) !important;
+    border-bottom: 2px solid var(--ghost-purple-2);
+}
+
+body.type-ghost .brand-text {
+    color: #EDE7F6 !important;
+}
+
+body.type-ghost .navbar-dark .navbar-nav .nav-link {
+    color: #EDE7F6 !important;
+}
+
+body.type-ghost .card {
+    background: #FFFFFF;
+    border: 2px solid var(--ghost-purple-2);
+    box-shadow: 0 2px 4px rgba(91, 33, 182, 0.1);
+}
+
+body.type-ghost .card-body,
+body.type-ghost .card-body p,
+body.type-ghost .card-body li,
+body.type-ghost .card-body span:not(.badge):not(.type-badge):not(.text-muted) {
+    color: #1F2937 !important;
+    font-weight: 500;
+}
+
+body.type-ghost .card-body strong {
+    color: #111827 !important;
+    font-weight: 700;
+}
+
+body.type-ghost .card-body,
+body.type-ghost .card-body p,
+body.type-ghost .card-body strong,
+body.type-ghost .card-body span:not(.badge):not(.type-badge) {
+    color: #4A148C;
+}
+
+body.type-ghost .nav-tabs .nav-link.active,
+body.type-ghost .nav-tabs .nav-link:hover {
+    border-bottom-color: var(--ghost-purple-1);
+    color: var(--ghost-purple-1);
+}
+
+body.type-ghost .pokemon-header-card,
+body.type-ghost .card-header.bg-primary {
+    background: linear-gradient(135deg, var(--ghost-purple-1) 0%, var(--ghost-purple-2) 100%) !important;
+    color: var(--white) !important;
+}
+
+/* Tipo Dragón - Azules índigo elegantes */
+body.type-dragon {
+    background: linear-gradient(135deg, #1E1B4B 0%, #312E81 50%, #4338CA 100%);
+    background-attachment: fixed;
+}
+
+body.type-dragon .navbar {
+    background: var(--dragon-blue-1) !important;
+    border-bottom: 2px solid var(--dragon-blue-2);
+}
+
+body.type-dragon .brand-text {
+    color: #E1BEE7 !important;
+}
+
+body.type-dragon .navbar-dark .navbar-nav .nav-link {
+    color: #E1BEE7 !important;
+}
+
+body.type-dragon .card {
+    background: #FFFFFF;
+    border: 2px solid var(--dragon-blue-2);
+    box-shadow: 0 2px 4px rgba(67, 56, 202, 0.1);
+}
+
+body.type-dragon .card-body,
+body.type-dragon .card-body p,
+body.type-dragon .card-body li,
+body.type-dragon .card-body span:not(.badge):not(.type-badge):not(.text-muted) {
+    color: #1F2937 !important;
+    font-weight: 500;
+}
+
+body.type-dragon .card-body strong {
+    color: #111827 !important;
+    font-weight: 700;
+}
+
+body.type-dragon .card-body,
+body.type-dragon .card-body p,
+body.type-dragon .card-body strong,
+body.type-dragon .card-body span:not(.badge):not(.type-badge) {
+    color: #4A148C;
+}
+
+body.type-dragon .nav-tabs .nav-link.active,
+body.type-dragon .nav-tabs .nav-link:hover {
+    border-bottom-color: var(--dragon-blue-1);
+    color: var(--dragon-blue-1);
+}
+
+body.type-dragon .pokemon-header-card,
+body.type-dragon .card-header.bg-primary {
+    background: linear-gradient(135deg, var(--dragon-blue-1) 0%, var(--dragon-blue-2) 100%) !important;
+    color: var(--white) !important;
+}
+
+/* Tipo Siniestro - Grises oscuros */
+body.type-dark {
+    background: linear-gradient(135deg, var(--dark-gray-1) 0%, var(--dark-gray-2) 50%, var(--dark-gray-3) 100%);
+    background-attachment: fixed;
+}
+
+body.type-dark .navbar {
+    background: var(--dark-gray-1) !important;
+    border-bottom: 2px solid var(--dark-gray-2);
+}
+
+body.type-dark .brand-text {
+    color: #F5F5F5 !important;
+}
+
+body.type-dark .navbar-dark .navbar-nav .nav-link {
+    color: #F5F5F5 !important;
+}
+
+body.type-dark .card {
+    background: #FFFFFF;
+    border: 2px solid var(--dark-gray-2);
+    box-shadow: 0 2px 4px rgba(55, 65, 81, 0.1);
+}
+
+body.type-dark .card-body,
+body.type-dark .card-body p,
+body.type-dark .card-body li,
+body.type-dark .card-body span:not(.badge):not(.type-badge):not(.text-muted) {
+    color: #1F2937 !important;
+    font-weight: 500;
+}
+
+body.type-dark .card-body strong {
+    color: #111827 !important;
+    font-weight: 700;
+}
+
+body.type-dark .card-body,
+body.type-dark .card-body p,
+body.type-dark .card-body strong,
+body.type-dark .card-body span:not(.badge):not(.type-badge) {
+    color: #212121;
+}
+
+body.type-dark .nav-tabs .nav-link.active,
+body.type-dark .nav-tabs .nav-link:hover {
+    border-bottom-color: var(--dark-gray-1);
+    color: var(--dark-gray-1);
+}
+
+body.type-dark .pokemon-header-card,
+body.type-dark .card-header.bg-primary {
+    background: linear-gradient(135deg, var(--dark-gray-1) 0%, var(--dark-gray-2) 100%) !important;
+    color: var(--white) !important;
+}
+
+/* Tipo Acero - Grises plateados elegantes */
+body.type-steel {
+    background: linear-gradient(135deg, #374151 0%, #4B5563 50%, #6B7280 100%);
+    background-attachment: fixed;
+}
+
+body.type-steel .navbar {
+    background: var(--steel-gray-1) !important;
+    border-bottom: 2px solid var(--steel-gray-2);
+}
+
+body.type-steel .brand-text {
+    color: #263238 !important;
+}
+
+body.type-steel .navbar-dark .navbar-nav .nav-link {
+    color: #263238 !important;
+}
+
+body.type-steel .card {
+    background: #FFFFFF;
+    border: 2px solid var(--steel-gray-2);
+    box-shadow: 0 2px 4px rgba(107, 114, 128, 0.1);
+}
+
+body.type-steel .card-body,
+body.type-steel .card-body p,
+body.type-steel .card-body li,
+body.type-steel .card-body span:not(.badge):not(.type-badge):not(.text-muted) {
+    color: #1F2937 !important;
+    font-weight: 500;
+}
+
+body.type-steel .card-body strong {
+    color: #111827 !important;
+    font-weight: 700;
+}
+
+body.type-steel .card-body,
+body.type-steel .card-body p,
+body.type-steel .card-body strong,
+body.type-steel .card-body span:not(.badge):not(.type-badge) {
+    color: #263238;
+}
+
+body.type-steel .nav-tabs .nav-link.active,
+body.type-steel .nav-tabs .nav-link:hover {
+    border-bottom-color: var(--steel-gray-1);
+    color: var(--steel-gray-1);
+}
+
+body.type-steel .pokemon-header-card,
+body.type-steel .card-header.bg-primary {
+    background: linear-gradient(135deg, var(--steel-gray-1) 0%, var(--steel-gray-2) 100%) !important;
+    color: #263238 !important;
+}
+
+/* Tipo Hada - Rosas pastel elegantes */
+body.type-fairy {
+    background: linear-gradient(135deg, #831843 0%, #9F1239 50%, #DB2777 100%);
+    background-attachment: fixed;
+}
+
+body.type-fairy .navbar {
+    background: var(--fairy-pink-1) !important;
+    border-bottom: 2px solid var(--fairy-pink-2);
+}
+
+body.type-fairy .brand-text {
+    color: #FCE4EC !important;
+}
+
+body.type-fairy .navbar-dark .navbar-nav .nav-link {
+    color: #FCE4EC !important;
+}
+
+body.type-fairy .card {
+    background: #FFFFFF;
+    border: 2px solid var(--fairy-pink-2);
+    box-shadow: 0 2px 4px rgba(219, 39, 119, 0.1);
+}
+
+body.type-fairy .card-body,
+body.type-fairy .card-body p,
+body.type-fairy .card-body li,
+body.type-fairy .card-body span:not(.badge):not(.type-badge):not(.text-muted) {
+    color: #1F2937 !important;
+    font-weight: 500;
+}
+
+body.type-fairy .card-body strong {
+    color: #111827 !important;
+    font-weight: 700;
+}
+
+body.type-fairy .card-body,
+body.type-fairy .card-body p,
+body.type-fairy .card-body strong,
+body.type-fairy .card-body span:not(.badge):not(.type-badge) {
+    color: #880E4F;
+}
+
+body.type-fairy .nav-tabs .nav-link.active,
+body.type-fairy .nav-tabs .nav-link:hover {
+    border-bottom-color: var(--fairy-pink-1);
+    color: var(--fairy-pink-1);
+}
+
+body.type-fairy .pokemon-header-card,
+body.type-fairy .card-header.bg-primary {
+    background: linear-gradient(135deg, var(--fairy-pink-1) 0%, var(--fairy-pink-2) 100%) !important;
+    color: var(--white) !important;
+}
+
+/* Página de detalle - Sin scroll - Layout fijo */
+.pokemon-detail-container {
+    height: calc(100vh - 140px);
+    overflow: hidden;
+    padding: 0.25rem 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.pokemon-detail-container .container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Eliminar barras de scroll solo en página de detalle */
+body.pokemon-detail-page * {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE y Edge */
+}
+
+body.pokemon-detail-page *::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+body.pokemon-detail-page {
+    overflow: hidden !important;
+}
+
+/* Página principal puede tener scroll */
+body.index-page {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+body.index-page * {
+    scrollbar-width: thin; /* Firefox */
+}
+
+body.index-page *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+body.index-page *::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.1);
+}
+
+body.index-page *::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--pokedex-red), var(--pokedex-orange));
+    border-radius: 4px;
+    border: 1px solid var(--pokedex-dark-red);
+}
+
+body.index-page *::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, var(--pokedex-dark-red), var(--pokedex-red));
+}
+
+.pokemon-detail-container .container {
+    padding-bottom: 0.5rem;
+}
+
+/* Header más compacto */
+.pokemon-header-card .card-body {
+    padding: 1rem !important;
+}
+
+.pokemon-header-card h1.display-4 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem !important;
+}
+
+.pokemon-header-card .lead {
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem !important;
+}
+
+/* Asegurar legibilidad en todos los textos de la página de detalle */
+.pokemon-detail-container .text-white h1,
+.pokemon-detail-container .text-white h2,
+.pokemon-detail-container .text-white h3,
+.pokemon-detail-container .text-white .display-4 {
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+}
+
+.pokemon-detail-container .text-white p,
+.pokemon-detail-container .text-white .lead {
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+}
+
+/* Ajustes para que todo quepa mejor - Layout ultra compacto sin scroll */
+.tab-content {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.tab-pane {
+    padding: 0.25rem 0;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.tab-pane .row {
+    flex: 1;
+    overflow: hidden;
+    margin-bottom: 0;
+    min-height: 0;
+}
+
+.tab-pane .col-lg-6,
+.tab-pane .col-lg-8,
+.tab-pane .col-lg-4 {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.tab-pane .row {
+    margin-bottom: 0.25rem;
+}
+
+.tab-pane .card {
+    margin-bottom: 0.5rem;
+}
+
+.tab-pane .card-body {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.tab-pane .card-header {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.9rem;
+}
+
+.tab-pane h4 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.tab-pane h5, .tab-pane h6 {
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+}
+
+.tab-pane p {
+    margin-bottom: 0.25rem;
+    font-size: 0.85rem;
+}
+
+.tab-pane .list-unstyled li {
+    margin-bottom: 0.25rem;
+    font-size: 0.85rem;
+}
+
+.tab-pane .col-lg-8, .tab-pane .col-lg-4, .tab-pane .col-lg-6 {
+    margin-bottom: 0.25rem;
+}
+
+/* Estadísticas más compactas */
+.tab-pane .stat-item {
+    margin-bottom: 0.5rem;
+}
+
+.tab-pane .progress {
+    height: 5px;
+    margin-top: 0.25rem;
+}
+
+/* Mejorar legibilidad en todos los textos - Asegurar contraste adecuado */
+.tab-pane .card-body p,
+.tab-pane .card-body li,
+.tab-pane .card-body strong,
+.tab-pane .card-body span:not(.badge):not(.type-badge):not(.text-muted) {
+    color: #1F2937 !important;
+    font-weight: 500;
+}
+
+.tab-pane .card-body strong {
+    color: #111827 !important;
+    font-weight: 700;
+}
+
+.tab-pane .card-body .text-muted {
+    color: #6c757d !important;
+    opacity: 1;
+}
+
+/* Asegurar contraste en badges y elementos especiales - Estilo Pokédex */
+.badge {
+    color: var(--white) !important;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+    font-weight: 700;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    letter-spacing: 0.3px;
+}
+
+.badge.bg-light {
+    color: #212529 !important;
+    text-shadow: none;
+}
+
+.badge.bg-light.text-dark {
+    color: #212529 !important;
+    background-color: #f8f9fa !important;
+    border: 1px solid #dee2e6;
+}
+
+.text-muted {
+    opacity: 0.8;
+}
+
+/* Mejorar contraste en inputs y formularios - Estilo Pokédex */
+.form-control,
+.form-select {
+    background-color: #FFFFFF;
+    color: #212529;
+    border: 3px solid #D0D0D0;
+    border-radius: 8px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--pokedex-red);
+    box-shadow: 
+        0 0 0 0.2rem rgba(230, 57, 70, 0.25),
+        inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    outline: none;
+}
+
+.input-group-text {
+    background: linear-gradient(135deg, var(--pokedex-red) 0%, var(--pokedex-dark-red) 100%);
+    border: 3px solid var(--pokedex-orange);
+    color: white;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Ajustes por tipo en formularios */
+body.type-ground .form-control:focus,
+body.type-ground .form-select:focus {
+    border-color: var(--ground-brown-1);
+    box-shadow: 0 0 0 0.2rem rgba(139, 69, 19, 0.25);
+}
+
+body.type-water .form-control:focus,
+body.type-water .form-select:focus {
+    border-color: var(--water-blue-1);
+    box-shadow: 0 0 0 0.2rem rgba(30, 144, 255, 0.25);
+}
+
+body.type-fire .form-control:focus,
+body.type-fire .form-select:focus {
+    border-color: var(--fire-red);
+    box-shadow: 0 0 0 0.2rem rgba(220, 38, 38, 0.25);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .display-4 {
+        font-size: 2rem;
+    }
+    
+    #pokemon-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+    
+    .pokemon-card {
+        padding: 1rem;
+    }
+    
+    .autocomplete-results-side {
+        margin-top: 1rem;
+    }
+    
+    .search-main-card .row {
+        flex-direction: column;
+    }
+    
+    .search-main-card .col-md-5,
+    .search-main-card .col-md-7 {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 992px) {
+    .autocomplete-results-side {
+        margin-top: 1rem;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease;
+}
+
+/* Loading Spinner */
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.15em;
+}
