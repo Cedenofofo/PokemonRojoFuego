@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+
+{% block title %}Comparador de Pokémon - PokéCompanion{% endblock %}
+
+{% block content %}
+<div class="container my-4 compare-container">
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1 class="display-4 fw-bold mb-2 text-white" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+                <i class="fas fa-balance-scale text-warning me-3"></i> Comparador de Pokémon
+            </h1>
+            <p class="lead text-white" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.7);">Elige tus luchadores y descubre quién tiene la ventaja</p>
+        </div>
+    </div>
+
+    <!-- Selectores de Pokémon - Diseño Pokédex -->
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-lg border-0 pokedex-card h-100">
+                <div class="card-header pokedex-header bg-success text-white py-3">
+                    <h4 class="mb-0"><i class="fas fa-user me-2"></i> Mi Pokémon</h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="search-container position-relative mb-3">
+                        <input type="text" class="form-control form-control-lg pokedex-input" id="pokemon1-search" placeholder="Buscar por nombre, tipo o ID...">
+                        <div id="pokemon1-autocomplete" class="autocomplete-dropdown"></div>
+                    </div>
+                    <div id="pokemon1-display" class="pokemon-display-area pokedex-display"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-lg border-0 pokedex-card h-100">
+                <div class="card-header pokedex-header bg-danger text-white py-3">
+                    <h4 class="mb-0"><i class="fas fa-user-friends me-2"></i> Pokémon Rival</h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="search-container position-relative mb-3">
+                        <input type="text" class="form-control form-control-lg pokedex-input" id="pokemon2-search" placeholder="Buscar por nombre, tipo o ID...">
+                        <div id="pokemon2-autocomplete" class="autocomplete-dropdown"></div>
+                    </div>
+                    <div id="pokemon2-display" class="pokemon-display-area pokedex-display"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comparación - Diseño Pokédex -->
+    <div id="comparison-results" class="row" style="display: none;">
+        <div class="col-12">
+            <!-- Tarjetas de Pokémon con estadísticas -->
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-lg border-0 pokedex-stats-card" id="pokemon1-stats-card">
+                        <div class="card-header pokedex-header bg-gradient-success text-white py-3">
+                            <h4 class="mb-0"><i class="fas fa-chart-bar me-2"></i> Estadísticas Base</h4>
+                        </div>
+                        <div class="card-body p-4" id="pokemon1-stats-body">
+                            <!-- Se llena con JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-lg border-0 pokedex-stats-card" id="pokemon2-stats-card">
+                        <div class="card-header pokedex-header bg-gradient-danger text-white py-3">
+                            <h4 class="mb-0"><i class="fas fa-chart-bar me-2"></i> Estadísticas Base</h4>
+                        </div>
+                        <div class="card-body p-4" id="pokemon2-stats-body">
+                            <!-- Se llena con JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Análisis de Enfrentamiento -->
+            <div class="card shadow-lg border-0 pokedex-card mb-4">
+                <div class="card-header pokedex-header bg-info text-white py-3">
+                    <h3 class="mb-0"><i class="fas fa-sword me-2"></i> Análisis de Enfrentamiento</h3>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row">
+                        <!-- Ventaja de Tipos -->
+                        <div class="col-md-6 mb-4">
+                            <h5 class="mb-3"><i class="fas fa-fire text-danger me-2"></i> Efectividad de Tipos</h5>
+                            <div id="type-effectiveness-analysis"></div>
+                        </div>
+                        <!-- Comparación de Estadísticas -->
+                        <div class="col-md-6 mb-4">
+                            <h5 class="mb-3"><i class="fas fa-chart-line text-primary me-2"></i> Comparación de Estadísticas</h5>
+                            <div id="stats-comparison" class="table-responsive"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ventajas y Defensas -->
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <div class="card border-0 shadow-lg pokedex-card h-100">
+                        <div class="card-header pokedex-header bg-success text-white">
+                            <h5 class="mb-0"><i class="fas fa-sword me-2"></i> Ventajas de Tipo</h5>
+                        </div>
+                        <div class="card-body" id="type-advantages">
+                            <!-- Se llena con JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card border-0 shadow-lg pokedex-card h-100">
+                        <div class="card-header pokedex-header bg-danger text-white">
+                            <h5 class="mb-0"><i class="fas fa-shield-alt me-2"></i> Defensas de Tipo</h5>
+                        </div>
+                        <div class="card-body" id="type-defenses">
+                            <!-- Se llena con JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conclusión y Recomendación Final -->
+            <div class="card shadow-lg border-0 pokedex-card">
+                <div class="card-header pokedex-header bg-warning text-dark py-3">
+                    <h3 class="mb-0"><i class="fas fa-trophy me-2"></i> Conclusión del Enfrentamiento</h3>
+                </div>
+                <div class="card-body p-4">
+                    <div id="recommendation"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.compare-container {
+    min-height: 100vh;
+    padding: 2rem 0;
+}
+
+.pokedex-card {
+    background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+    border: 4px solid #E0E0E0;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 
+        0 6px 12px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    position: relative;
+    overflow: hidden;
+}
+
+.pokedex-card::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--pokedex-red), var(--pokedex-orange), var(--pokedex-yellow));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.pokedex-card:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 
+        0 12px 24px rgba(230, 57, 70, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    border-color: var(--pokedex-red);
+}
+
+.pokedex-card:hover::before {
+    opacity: 0.15;
+}
+
+.pokedex-header {
+    border-radius: 12px 12px 0 0 !important;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    border-bottom: 3px solid rgba(255, 255, 255, 0.2);
+    letter-spacing: 0.5px;
+}
+
+.bg-gradient-success {
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%) !important;
+    border-bottom-color: #34ce57 !important;
+}
+
+.bg-gradient-danger {
+    background: linear-gradient(135deg, var(--pokedex-red) 0%, var(--pokedex-dark-red) 100%) !important;
+    border-bottom-color: var(--pokedex-orange) !important;
+}
+
+.pokedex-input {
+    border: 3px solid #E0E0E0;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background: #FFFFFF;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pokedex-input:focus {
+    border-color: var(--pokedex-red);
+    box-shadow: 
+        0 0 0 0.2rem rgba(230, 57, 70, 0.25),
+        inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    outline: none;
+}
+
+.pokemon-display-area {
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    border-radius: 15px;
+    border: 2px dashed #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.pokedex-display:empty::before {
+    content: "🔍 Busca y selecciona un Pokémon";
+    color: #6c757d;
+    font-style: italic;
+    font-size: 1.1rem;
+}
+
+.pokedex-stats-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
+}
+
+.autocomplete-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1050;
+    background: #FFFFFF;
+    border: 3px solid var(--pokedex-red);
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    box-shadow: 
+        0 8px 16px rgba(230, 57, 70, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    max-height: 350px;
+    overflow-y: auto;
+    display: none;
+}
+
+.autocomplete-dropdown.show {
+    display: block;
+}
+
+.autocomplete-item {
+    padding: 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: all 0.2s ease;
+}
+
+.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-item:hover {
+    background: linear-gradient(90deg, #FFF8F0 0%, #FFFFFF 100%);
+    transform: translateX(5px);
+    border-left: 4px solid var(--pokedex-red);
+    box-shadow: 2px 0 8px rgba(230, 57, 70, 0.2);
+}
+
+.search-container {
+    z-index: 10;
+}
+
+/* Scrollbar personalizado */
+.autocomplete-dropdown::-webkit-scrollbar {
+    width: 8px;
+}
+
+.autocomplete-dropdown::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.autocomplete-dropdown::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--pokedex-red), var(--pokedex-orange));
+    border-radius: 10px;
+    border: 1px solid var(--pokedex-dark-red);
+}
+
+.autocomplete-dropdown::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, var(--pokedex-dark-red), var(--pokedex-red));
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .compare-container {
+        padding: 1rem 0;
+    }
+    
+    .pokedex-card {
+        margin-bottom: 1.5rem;
+    }
+}
+</style>
+
+<script src="{{ url_for('static', filename='js/compare.js') }}"></script>
+{% endblock %}
